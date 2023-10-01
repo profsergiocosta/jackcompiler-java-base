@@ -15,6 +15,8 @@ public class Scanner {
     private int current;
     private int start;
 
+    private int line = 1;
+
     private static final Map<String, TokenType> keywords;
  
 
@@ -30,6 +32,39 @@ public class Scanner {
         this.input = input;
         current = 0;
         start = 0;
+    }
+
+    private void skipCommentsLine() {
+        for (char ch = peek(); ch != '\n' && ch != 0; advance(), ch = peek()){
+            if (ch == '\n'){
+                line++;
+            }
+        }
+    }
+
+    private void skipCommentsBlock() {
+        boolean fullComment = false;
+        advance();
+
+        while (!fullComment) {
+            advance();
+            char ch = peek();
+
+            if (ch == 0) {
+                System.exit(1);
+            }
+
+            if (ch == '*'){
+                for (ch = peek(); ch == '*'; advance(), ch = peek()) {
+                    ;
+                }
+
+                if (ch == '/') {
+                    fullComment = true;
+                    advance();
+                }
+            }
+        }
     }
 
     private void skipWhitespace() {
@@ -65,6 +100,17 @@ public class Scanner {
                 return new Token (MINUS,"-");
             case '"':
                 return string();
+            case '/':
+                if(peekNext() == '/') {
+                    skipCommentsLine();
+                    return nextToken();
+                } else if(peekNext() == '*') {
+                    skipCommentsBlock();
+                    return nextToken();
+                } else {
+                    advance();
+                    return new Token(TokenType.SLASH, "/");
+                }
             case 0:
                 return new Token (EOF,"EOF");
             default:
@@ -126,6 +172,16 @@ public class Scanner {
            return (char)input[current];
        return 0;
     }
+
+    private char peekNext() {
+        int next = current + 1;
+        if (next < input.length) {
+            return (char) input[next];
+        } else {
+            return 0;
+        }
+    }
+
 
 
     

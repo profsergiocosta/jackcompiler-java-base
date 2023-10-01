@@ -13,6 +13,8 @@ public enum TokenType {
 
      IDENT,
 
+     SLASH,
+
  
      // keywords
      METHOD,
