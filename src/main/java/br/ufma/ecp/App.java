@@ -9,6 +9,7 @@ public class App {
     public static void main(String[] args) {
 
         String input = """
+             \"Teste\"
             int estoque = //valor recuperado do sistema
 
             if (estoque >= 100) {
