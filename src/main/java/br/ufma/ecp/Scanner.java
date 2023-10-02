@@ -114,8 +114,20 @@ public class Scanner {
             case 0:
                 return new Token (EOF,"EOF");
             default:
-                advance();
-                return new Token(ILLEGAL, Character.toString(ch));
+                if (Character.isDigit(ch)) { //quando encontro um dígito, tenta montar o número e não apenas retorna este dígito
+                    return number();
+                }
+
+                if (Character.isLetter(ch)) { //se for uma letra, retorno um idenificador
+                    return identifier();
+                }
+
+                if (TokenType.isSymbol(ch)) { // caso sejam sinais - + ou outros
+                    return symbol();
+                }
+
+                throw new Error(line+":Unexpected character: "+peek());
+
         }
     }
 
@@ -132,10 +144,18 @@ public class Scanner {
         while (Character.isDigit(peek())) {
             advance();
         }
-        
-            String num = new String(input, start, current-start, StandardCharsets.UTF_8)  ;
-            return new Token(NUMBER, num);
+
+        String num = new String(input, start, current-start, StandardCharsets.UTF_8)  ;
+        return new Token(NUMBER, num);
     }
+
+    private Token symbol() {
+        var ch = peek();
+        advance();
+        String sym = new String(input, start, current-start, StandardCharsets.UTF_8)
+        return new Token(STRING, sym);
+    }
+
 
     private Token string () {
         advance();
