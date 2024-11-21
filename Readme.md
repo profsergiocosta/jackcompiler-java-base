@@ -1,2 +1,4 @@
-mvn package
-java -cp target/jackcompiler-1.0-SNAPSHOT.jar br.ufma.ecp.App
+Grupo:
+ANTONIO MARCOS PATRICIO CASTRO
+ANTONIO FIALHO DA SILVA NETO
+NILTON MACIEL MANGUEIRA
