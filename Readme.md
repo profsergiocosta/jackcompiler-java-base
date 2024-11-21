@@ -48,5 +48,5 @@ O projeto foi desenvolvido em equipe para aplicar conceitos fundamentais de comp
 ## ✒️ Autores
 
 * **AMPC** - *ANTONIO MARCOS PATRICIO CASTRO* - [AMPC](https://github.com/TonyMPCastro)
-* **ANTONIO FIALHO** - *ANTONIO FIALHO DA SILVA NETO* - [PERFIL]()
-* **NILTON MANGUEIRA** - *NILTON MACIEL MANGUEIRA* - [PERFIL]()
+* **ANTONIO FIALHO** - *ANTONIO FIALHO DA SILVA NETO* - [PERFIL](https://github.com/AntonioFialhoSN)
+* **NILTON MANGUEIRA** - *NILTON MACIEL MANGUEIRA* - [PERFIL](https://github.com/e-Mangueira)
