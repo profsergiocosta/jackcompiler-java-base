@@ -49,4 +49,4 @@ O projeto foi desenvolvido em equipe para aplicar conceitos fundamentais de comp
 
 * **AMPC** - *ANTONIO MARCOS PATRICIO CASTRO* - [AMPC](https://github.com/TonyMPCastro)
 * **ANTONIO FIALHO** - *ANTONIO FIALHO DA SILVA NETO* - [PERFIL]()
-* **Guilherme** - *NILTON MACIEL MANGUEIRA* - [PERFIL]()
+* **NILTON MANGUEIRA** - *NILTON MACIEL MANGUEIRA* - [PERFIL]()
