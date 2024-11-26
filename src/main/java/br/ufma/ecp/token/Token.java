@@ -15,7 +15,7 @@ public class Token {
     public String toString() {
         String categoria = type.toString().toLowerCase();
         String valor = lexeme;
-        if (type.isSymbol(lexeme)) {
+        if (TokenType.isSymbol(lexeme)) {
             categoria = "symbol";
             //Os símbolos <, >, ", e & são impressos como &lt;  &gt;  &quot; e &amp; Para não conflitar com o significado destes símbolos no XML
             if (valor.equals(">")) {
