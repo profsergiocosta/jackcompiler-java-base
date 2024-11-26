@@ -52,13 +52,13 @@ public class ScannerTest extends TestSupport {
         var scanner = new Scanner(input.getBytes(StandardCharsets.UTF_8));
         var result = new StringBuilder();
         
-        result.append("<tokens>\n");
+        result.append("<tokens>\r\n");
 
         for (Token tk = scanner.nextToken(); tk.type !=TokenType.EOF; tk = scanner.nextToken()) {
-            result.append(String.format("%s\n",tk.toString()));
+            result.append(String.format("%s\r\n",tk.toString()));
         }
         
-        result.append("</tokens>\n");
+        result.append("</tokens>\r\n");
         System.out.println(result.toString());
         assertEquals(expectedResult, result.toString());
     }

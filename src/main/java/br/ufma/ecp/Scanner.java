@@ -127,7 +127,7 @@ public class Scanner {
                 return new Token(TokenType.DOT, ".");
             case '&':
                 advance();
-                return new Token(TokenType.AND, "&");
+                return new Token(TokenType.AND, "&amp;");
             case '|':
                 advance();
                 return new Token(TokenType.OR, "|");
@@ -137,10 +137,10 @@ public class Scanner {
 
             case '>':
                 advance();
-                return new Token(TokenType.GT, ">");
+                return new Token(TokenType.GT, "&gt;");
             case '<':
                 advance();
-                return new Token(TokenType.LT, "<");
+                return new Token(TokenType.LT, "&lt;");
             case '=':
                 advance();
                 return new Token(TokenType.EQ, "=");
