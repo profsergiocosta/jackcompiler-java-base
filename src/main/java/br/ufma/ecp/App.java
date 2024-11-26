@@ -47,16 +47,5 @@ public class App {
         // Parser p = new Parser (fromFile().getBytes());
         // p.parse();
 
-        /*
-         * String input = "489-85+69";
-         * Scanner scan = new Scanner (input.getBytes());
-         * System.out.println(scan.nextToken());
-         * System.out.println(scan.nextToken());
-         * System.out.println(scan.nextToken());
-         * System.out.println(scan.nextToken());
-         * System.out.println(scan.nextToken());
-         * Token tk = new Token(NUMBER, "42");
-         * System.out.println(tk);
-         */
     }
 }
