@@ -34,7 +34,7 @@ public enum TokenType {
 
     ILLEGAL;
 
-    static public boolean isSymbol(char c) {
+    static public boolean isSymbol(String c) {
         String symbols = "{}()[].,;+-*/&|<>=~";
         return symbols.indexOf(c) > -1;
     }
