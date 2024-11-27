@@ -1,11 +1,27 @@
 package br.ufma.ecp.token;
 
 import java.util.List;
-import java.util.Map;
 
 public enum TokenType {
     PLUS("+"),
     MINUS("-"),
+    SLASH("/"),
+    ASTERISK("*"),
+    DOT("."),
+    AND("&"),
+    OR("|"),
+    NOT("~"),
+    GREATER(">"),
+    LOWER("<"),
+    EQUALS("="),
+    LPAREN("("),
+    RPAREN(")"),
+    LBRACKET("["),
+    RBRACKET("]"),
+    LBRACE("{"),
+    RBRACE("}"),
+    SEMICOLON(";"),
+    COMMA(","),
 
      // Literals.
      NUMBER("0123456789"),
@@ -36,6 +52,7 @@ public enum TokenType {
      DO("do"),
      ELSE("else"),
      RETURN("return"),
+     INT("int"),
 
      EOF("\0"),
 
@@ -46,13 +63,13 @@ public enum TokenType {
         return symbols.indexOf(c) > -1;
     }
 
-    private String value;
+    private String string;
 
     TokenType(String value) {
     }
 
-    public String getValue() {
-         return this.value;
+    public String getString() {
+         return this.string;
     }
 
     static public boolean isKeyword (TokenType type) {
