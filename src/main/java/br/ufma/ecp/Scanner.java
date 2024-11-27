@@ -11,22 +11,39 @@ import br.ufma.ecp.token.TokenType;
 
 public class Scanner {
 
+    private static final Map<String, TokenType> keywords;
+
+    static {
+        keywords = new HashMap<>();
+        keywords.put("while", TokenType.WHILE);
+        keywords.put("int", TokenType.INT);
+        keywords.put("class", TokenType.CLASS);
+        keywords.put("constructor", TokenType.CONSTRUCTOR);
+        keywords.put("function", TokenType.FUNCTION);
+        keywords.put("method", TokenType.METHOD);
+        keywords.put("field", TokenType.FIELD);
+        keywords.put("static", TokenType.STATIC);
+        keywords.put("var", TokenType.VAR);
+        keywords.put("char", TokenType.CHAR);
+        keywords.put("boolean", TokenType.BOOLEAN);
+        keywords.put("void", TokenType.VOID);
+        keywords.put("true", TokenType.TRUE);
+        keywords.put("false", TokenType.FALSE);
+        keywords.put("null", TokenType.NULL);
+        keywords.put("this", TokenType.THIS);
+        keywords.put("let", TokenType.LET);
+        keywords.put("do", TokenType.DO);
+        keywords.put("if", TokenType.IF);
+        keywords.put("else", TokenType.ELSE);
+        keywords.put("return", TokenType.RETURN);
+    }
+
     private byte[] input;
     private int current;
     private int start;
 
-    private static final Map<String, TokenType> keywords;
- 
 
-    static {
-        keywords = new HashMap<>();
-        keywords.put("method",    TokenType.METHOD);
-        keywords.put("while",  TokenType.WHILE);
-        keywords.put("if",   TokenType.IF);
-    }
-
-    
-    public Scanner (byte[] input) {
+    public Scanner(byte[] input) {
         this.input = input;
         current = 0;
         start = 0;
@@ -39,9 +56,9 @@ public class Scanner {
             ch = peek();
         }
     }
-    
 
-    public Token nextToken () {
+
+    public Token nextToken() {
 
         skipWhitespace();
 
@@ -57,16 +74,67 @@ public class Scanner {
         }
 
         switch (ch) {
+            case '/':
+                advance();
+                return new Token(TokenType.SLASH, "/");
             case '+':
                 advance();
-                return new Token (PLUS,"+");
+                return new Token(TokenType.PLUS, "+");
             case '-':
                 advance();
-                return new Token (MINUS,"-");
+                return new Token(TokenType.MINUS, "-");
+            case '*':
+                advance();
+                return new Token(TokenType.ASTERISK, "*");
+            case '.':
+                advance();
+                return new Token(TokenType.DOT, ".");
+            case '&':
+                advance();
+                return new Token(TokenType.AND, "&");
+            case '|':
+                advance();
+                return new Token(TokenType.OR, "|");
+            case '~':
+                advance();
+                return new Token(TokenType.NOT, "~");
+            case '>':
+                advance();
+                return new Token(GREATER, ">");
+            case '<':
+                advance();
+                return new Token(LOWER, "<");
+            case '=':
+                advance();
+                return new Token(EQUALS, "=");
+            case '(':
+                advance();
+                return new Token(TokenType.LPAREN, "(");
+            case ')':
+                advance();
+                return new Token(TokenType.RPAREN, ")");
+            case '{':
+                advance();
+                return new Token(TokenType.LBRACE, "{");
+            case '}':
+                advance();
+                return new Token(TokenType.RBRACE, "}");
+            case '[':
+                advance();
+                return new Token(TokenType.LBRACKET, "[");
+            case ']':
+                advance();
+                return new Token(TokenType.RBRACKET, "]");
+            case ';':
+                advance();
+                return new Token(TokenType.SEMICOLON, ";");
+            case ',':
+                advance();
+                return new Token(TokenType.COMMA, ",");
             case '"':
                 return string();
             case 0:
-                return new Token (EOF,"EOF");
+                return new Token(EOF, "EOF");
             default:
                 advance();
                 return new Token(ILLEGAL, Character.toString(ch));
@@ -76,7 +144,7 @@ public class Scanner {
     private Token identifier() {
         while (isAlphaNumeric(peek())) advance();
 
-        String id = new String(input, start, current-start, StandardCharsets.UTF_8)  ;
+        String id = new String(input, start, current - start, StandardCharsets.UTF_8);
         TokenType type = keywords.get(id);
         if (type == null) type = IDENT;
         return new Token(type, id);
@@ -86,24 +154,24 @@ public class Scanner {
         while (Character.isDigit(peek())) {
             advance();
         }
-        
-            String num = new String(input, start, current-start, StandardCharsets.UTF_8)  ;
-            return new Token(NUMBER, num);
+
+        String num = new String(input, start, current - start, StandardCharsets.UTF_8);
+        return new Token(NUMBER, num);
     }
 
-    private Token string () {
+    private Token string() {
         advance();
         start = current;
         while (peek() != '"' && peek() != 0) {
             advance();
         }
-        String s = new String(input, start, current-start, StandardCharsets.UTF_8);
-        Token token = new Token (TokenType.STRING,s);
+        String s = new String(input, start, current - start, StandardCharsets.UTF_8);
+        Token token = new Token(TokenType.STRING, s);
         advance();
         return token;
     }
 
-    private void advance()  {
+    private void advance() {
         char ch = peek();
         if (ch != 0) {
             current++;
@@ -112,21 +180,20 @@ public class Scanner {
 
     private boolean isAlpha(char c) {
         return (c >= 'a' && c <= 'z') ||
-               (c >= 'A' && c <= 'Z') ||
+                (c >= 'A' && c <= 'Z') ||
                 c == '_';
-      }
-    
-      private boolean isAlphaNumeric(char c) {
-        return isAlpha(c) || Character.isDigit((c));
-      }
-    
+    }
 
-    private char peek () {
-        if (current < input.length)
-           return (char)input[current];
-       return 0;
+    private boolean isAlphaNumeric(char c) {
+        return isAlpha(c) || Character.isDigit((c));
     }
 
 
-    
+    private char peek() {
+        if (current < input.length)
+            return (char) input[current];
+        return 0;
+    }
+
+
 }
