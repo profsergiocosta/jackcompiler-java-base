@@ -1,11 +1,5 @@
 package br.ufma.ecp;
 
-import static br.ufma.ecp.token.TokenType.*;
-
-
-
-import br.ufma.ecp.token.Token; 
-
 public class App 
 {
 
@@ -14,7 +8,7 @@ public class App
     {
 
     
-        String input = "289";
+        String input = "variavelQualquer";
         Scanner scan = new Scanner (input.getBytes());
         System.out.println(scan.nextToken());
 

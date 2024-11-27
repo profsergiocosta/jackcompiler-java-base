@@ -15,9 +15,6 @@ public class Token {
         if (type.equals("STRING"))
             type =  "stringConst";
 
-        if (type.equals("IDENT"))
-            type =  "identifier";
-
         if (TokenType.isSymbol(lexeme.charAt(0)))
             type = "symbol";
 
