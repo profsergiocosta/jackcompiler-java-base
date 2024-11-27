@@ -11,8 +11,6 @@ public class Token {
 
     public String toString() {
         var type = this.type.toString();
-        if (type.equals("NUMBER"))
-            type =  "intConst";
 
         if (type.equals("STRING"))
             type =  "stringConst";
