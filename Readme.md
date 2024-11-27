@@ -8,3 +8,11 @@
 - [ ] Leitura de strings
 - [ ] Ignorar comentários
 - [ ] Contagem de linhas
+
+
+#### Como executar
+
+```bash
+mvn package
+java -cp target/jackcompiler-1.0-SNAPSHOT.jar br.ufma.ecp.App
+```
