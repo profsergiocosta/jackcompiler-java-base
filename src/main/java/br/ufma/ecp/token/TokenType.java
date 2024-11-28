@@ -25,8 +25,7 @@ public enum TokenType {
 
      // Literals.
      NUMBER("0123456789"),
-     STRING("IDENT"),
-
+     STRING("STRING"),
 
      IDENT("IDENT"),
 
