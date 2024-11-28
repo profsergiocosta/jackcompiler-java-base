@@ -1,0 +1,39 @@
+class GradeCalculator {
+
+   field int n1, n2, n3; // Notas de 3 avaliações
+   field int average;    // Média das notas
+
+   /** Inicializa as notas e calcula a média */
+   constructor GradeCalculator new(int grade1, int grade2, int grade3) {
+      let n1 = grade1;
+      let n2 = grade2;
+      let n3 = grade3;
+      do calculateAverage();
+      return this;
+   }
+
+   /** Calcula a média das notas */
+   method void calculateAverage() {
+      let average = (n1 + n2 + n3) / 3;
+      do checkApproval();
+      return;
+   }
+
+   /** Verifica se a média é maior ou igual a 7 */
+   method void checkApproval() {
+      if (average >= 7) {
+         do Output.printString("Aprovado");
+         do Output.println();
+      } else {
+         do Output.printString("Reprovado");
+         do Output.println();
+      }
+      return;
+   }
+
+   /** Libera a memória alocada */
+   method void dispose() {
+      do Memory.deAlloc(this);
+      return;
+   }
+}
