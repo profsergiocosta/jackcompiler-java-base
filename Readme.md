@@ -74,6 +74,6 @@ Nós usamos [GitHub](https://github.com) para controle de versão. Para as vers�
 
 - **Nerval Junior** - *Documentação, Desenvolvimento, Engenharia* - [Perfil GitHub](https://github.com/nervaljunior)
 - **Luan Costa** - *Documentação, Desenvolvimento* - [Perfil GitHub](https://github.com/luanc202)
-- **Rodrigo ** - *Documentação, Desenvolvimento* - [Perfil GitHub](https://github.com/rodrigolsdev)
+- **Rodrigo Lima** - *Documentação, Desenvolvimento* - [Perfil GitHub](https://github.com/rodrigolsdev)
 
 ---
