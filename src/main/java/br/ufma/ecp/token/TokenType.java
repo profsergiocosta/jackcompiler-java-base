@@ -1,35 +1,75 @@
 package br.ufma.ecp.token;
 
 import java.util.List;
-import java.util.Map;
 
 public enum TokenType {
-    PLUS,MINUS,
+    PLUS("+"),
+    MINUS("-"),
+    SLASH("/"),
+    ASTERISK("*"),
+    DOT("."),
+    AND("&"),
+    OR("|"),
+    NOT("~"),
+    GREATER(">"),
+    LOWER("<"),
+    EQUALS("="),
+    LPAREN("("),
+    RPAREN(")"),
+    LBRACKET("["),
+    RBRACKET("]"),
+    LBRACE("{"),
+    RBRACE("}"),
+    SEMICOLON(";"),
+    COMMA(","),
 
      // Literals.
-     NUMBER,
-     STRING,
+     NUMBER("0123456789"),
+     STRING("STRING"),
 
-
-     IDENT,
+     IDENT("IDENT"),
 
  
      // keywords
-     METHOD,
-     WHILE,
-     IF,
-     CLASS,
-     CONSTRUCTOR,
+     METHOD("method"),
+     WHILE("while"),
+     IF("if"),
+     CLASS("class"),
+     CONSTRUCTOR("constructor"),
+     FUNCTION("function"),
+     FIELD("field"),
+     STATIC("static"),
+     VAR("var"),
+     CHAR("char"),
+     BOOLEAN("boolean"),
+     VOID("void"),
+     TRUE("true"),
+     FALSE("false"),
+     NULL("null"),
+     THIS("this"),
+     LET("let"),
+     DO("do"),
+     ELSE("else"),
+     RETURN("return"),
+     INT("int"),
 
-     EOF,
+     EOF("\0"),
 
-     ILLEGAL;
+     ILLEGAL("ILLEGAL");
 
      static public boolean isSymbol (char c) {
         String symbols = "{}()[].,;+-*/&|<>=~";
         return symbols.indexOf(c) > -1;
     }
 
+    private String string;
+
+    TokenType(String value) {
+    }
+
+    public String getString() {
+         return this.string;
+    }
 
     static public boolean isKeyword (TokenType type) {
         List<TokenType> keywords  = 
