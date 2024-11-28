@@ -14,6 +14,7 @@ public class App {
                 comentario em bloco
                 */
                 42 ola
+                let a = 10;
 
                 """;
         Scanner scan = new Scanner(input.getBytes());
