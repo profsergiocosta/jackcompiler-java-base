@@ -57,6 +57,31 @@ public class Scanner {
         }
     }
 
+    private void skipLineComments() {
+        for (char ch = peek(); ch != '\n' && ch != 0;  advance(), ch = peek()) ;
+    }
+
+    private void skipBlockComments() {
+        boolean endComment = false;
+        advance();
+        while (!endComment) {
+            advance();
+            char ch = peek();
+            if ( ch == 0) { // eof, lexical error
+                System.exit(1);
+            }
+
+            if (ch == '*') {
+                for (ch = peek(); ch == '*';  advance(), ch = peek()) ;
+                if (ch == '/') {
+                    endComment = true;
+                    advance();
+                }
+            }
+
+        }
+    }
+
 
     public Token nextToken() {
 
@@ -75,8 +100,18 @@ public class Scanner {
 
         switch (ch) {
             case '/':
-                advance();
-                return new Token(TokenType.SLASH, "/");
+                if (peekNext() == '/') {
+                    skipLineComments();
+                    return nextToken();
+                } else if (peekNext() == '*') {
+                    skipBlockComments();
+                    return nextToken();
+                }
+                else {
+                    advance();
+                    return new Token (TokenType.SLASH,"/");
+                }
+
             case '+':
                 advance();
                 return new Token(TokenType.PLUS, "+");
@@ -159,14 +194,14 @@ public class Scanner {
         return new Token(NUMBER, num);
     }
 
-    private Token string() {
+    private Token string () {
         advance();
         start = current;
         while (peek() != '"' && peek() != 0) {
             advance();
         }
-        String s = new String(input, start, current - start, StandardCharsets.UTF_8);
-        Token token = new Token(TokenType.STRING, s);
+        String s = new String(input, start, current-start, StandardCharsets.UTF_8);
+        Token token = new Token (TokenType.STRING,s);
         advance();
         return token;
     }
@@ -193,6 +228,15 @@ public class Scanner {
         if (current < input.length)
             return (char) input[current];
         return 0;
+    }
+
+    private char peekNext () {
+        int next = current + 1;
+        if ( next  < input.length) {
+            return (char)input[next];
+        } else {
+            return 0;
+        }
     }
 
 
