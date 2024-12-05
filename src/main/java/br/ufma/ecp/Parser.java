@@ -145,4 +145,37 @@ public class Parser {
        expectPeek(TokenType.RPAREN);
     }
 
+    // 'do' subroutineCall ';'
+    public void parseDo() {
+        printNonTerminal("doStatement");
+        expectPeek(TokenType.DO);
+        parseSubroutineCall();
+        expectPeek(TokenType.SEMICOLON);
+        printNonTerminal("/doStatement");
+     }
+
+     
+    void parseStatement() {
+        switch (peekToken.type) {
+            case LET:
+                parseLet();
+                break;
+            case WHILE:
+               // parseWhile();
+                break;
+            case IF:
+               // parseIf();
+                break;
+            case RETURN:
+                //parseReturn();
+                break;
+            case DO:
+                parseDo();
+                break;
+            default:
+                throw error(peekToken, "Expected a statement");
+        }
+    }
+
+
 }
