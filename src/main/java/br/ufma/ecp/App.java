@@ -13,7 +13,9 @@ public class App {
                 /*
                 comentario em bloco
                 */
-                42 ola
+
+
+                42 ola;
                 let a = 10;
 
                 """;
