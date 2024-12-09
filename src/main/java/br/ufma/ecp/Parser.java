@@ -81,6 +81,15 @@ public class Parser {
         printNonTerminal("/parameterList");
     }
 
+    public void parseSubroutineBody(String functionName, TokenType subroutineType) {
+
+        printNonTerminal("subroutineBody");
+        //expectPeek(TokenType.LBRACE);
+
+       // expectPeek(TokenType.RBRACE);
+        printNonTerminal("/subroutineBody");
+    }
+
     public void parseTerm() {
         printNonTerminal("term");
         switch (peekToken.type) {
