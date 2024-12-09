@@ -14,3 +14,5 @@ bin/
 .project
 test/resources/projects/**/.vscode
 test/resources/projects/maven/salut/testGradle
+# Para ignorar todos os arquivos e sub-pastas da pasta code_test/
+code_test/
