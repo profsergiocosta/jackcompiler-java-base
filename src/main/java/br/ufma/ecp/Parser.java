@@ -13,6 +13,8 @@ public class Parser {
     private Token peekToken;
     private StringBuilder xmlOutput = new StringBuilder();
 
+    private String className;
+
     public Parser(byte[] input) {
         scan = new Scanner(input);
         nextToken();
@@ -24,8 +26,9 @@ public class Parser {
     }
 
     public void parse() {
-
+       // parseClass();
     }
+
 
     // funções auxiliares
     public String XMLOutput() {
@@ -42,6 +45,28 @@ public class Parser {
 
     boolean currentTokenIs(TokenType type) {
         return currentToken.type == type;
+    }
+    // classVarDec → ( 'static' | 'field' ) type varName ( ',' varName)* ';'
+    public void parseClassVarDec() {
+        printNonTerminal("classVarDec");
+        expectPeek(TokenType.FIELD, TokenType.STATIC);
+
+        // 'int' | 'char' | 'boolean' | className
+        expectPeek(TokenType.INT, TokenType.CHAR, TokenType.BOOLEAN, TokenType.IDENT);
+        String type = currentToken.value();
+
+        expectPeek(TokenType.IDENT);
+        String name = currentToken.value();
+
+        while (peekTokenIs(TokenType.COMMA)) {
+            expectPeek(TokenType.COMMA);
+            expectPeek(TokenType.IDENT);
+
+            name = currentToken.value();
+        }
+
+        expectPeek(TokenType.SEMICOLON);
+        printNonTerminal("/classVarDec");
     }
 
     private void expectPeek(TokenType... types) {
@@ -138,8 +163,7 @@ public class Parser {
         printNonTerminal("/letStatement");
     }
 
-    public  //identifier '(' ')'
-    void parseSubroutineCall() {
+    public void parseSubroutineCall() {
        expectPeek(TokenType.IDENT);
        expectPeek(TokenType.LPAREN);
        expectPeek(TokenType.RPAREN);

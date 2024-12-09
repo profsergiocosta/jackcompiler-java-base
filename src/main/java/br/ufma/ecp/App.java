@@ -16,6 +16,8 @@ public class App {
                 42 ola
                 let a = 10;
 
+                class SquareGame {}
+
                 """;
         Scanner scan = new Scanner(input.getBytes());
         for (Token tk = scan.nextToken(); tk.type != TokenType.EOF; tk = scan.nextToken()) {

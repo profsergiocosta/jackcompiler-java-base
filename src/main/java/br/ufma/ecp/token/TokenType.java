@@ -33,6 +33,15 @@ public enum TokenType {
 
     ILLEGAL;
 
+    private TokenType() {
+    }
+
+    private TokenType(String value) {
+        this.value = value;
+    }
+
+    public String value;
+
     static public boolean isSymbol(String c) {
         String symbols = "{}()[].,;+-*/&|<>=~";
         return symbols.indexOf(c) > -1;
