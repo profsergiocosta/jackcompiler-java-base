@@ -177,7 +177,35 @@ public class ParserTest  extends TestSupport {
         assertEquals(expectedResult, result);
     }
 
+    @Test
+    public void testParseParameterList() {
+        var input = """
+            int Ax, int Ay, int Asize
+                """;
+                
+        var parser = new Parser(input.getBytes(StandardCharsets.UTF_8));
+        parser.parseParameterList();
+        var expectedResult = """
+            <parameterList>
+              <keyword> int </keyword>
+              <identifier> Ax </identifier>
+              <symbol> , </symbol>
+              <keyword> int </keyword>
+              <identifier> Ay </identifier>
+              <symbol> , </symbol>
+              <keyword> int </keyword>
+              <identifier> Asize </identifier>
+            </parameterList>
+                """;
 
+        var result = parser.XMLOutput();
+        expectedResult = expectedResult.replaceAll("  ", "");
+        result = result.replaceAll("\r", ""); // no codigo em linux não tem o retorno de carro
+        assertEquals(expectedResult, result);
+    }
+
+
+    
     // Testes finais
     
     @Test
