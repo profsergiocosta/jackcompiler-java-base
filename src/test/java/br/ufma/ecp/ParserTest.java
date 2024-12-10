@@ -312,6 +312,25 @@ public class ParserTest  extends TestSupport {
         assertEquals(expectedResult, result);
     }
 
+    @Test
+    public void testParseVarDec(){
+      var input = "var Strinng s;";
+        var parser = new Parser(input.getBytes(StandardCharsets.UTF_8));
+        parser.parseVarDec();
+				var expectedResult =  """
+        <varDec>
+          <keyword> var </keyword>
+          <identifier> String </identifier>
+          <identifier> s </identifier>
+          <symbol> ; </symbol>
+        </varDec>
+				""";
+        var result = parser.XMLOutput();
+        expectedResult = expectedResult.replaceAll("  ", "");
+        result = result.replaceAll("\r", ""); // no codigo em linux não tem o retorno de carro
+        assertEquals(expectedResult, result);
+
+    }
     
     // Testes finais
     
