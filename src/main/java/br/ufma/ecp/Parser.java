@@ -2,6 +2,8 @@ package br.ufma.ecp;
 
 import static br.ufma.ecp.token.TokenType.IDENT;
 
+import javax.swing.text.Segment;
+
 import br.ufma.ecp.token.Token;
 import br.ufma.ecp.token.TokenType;
 
@@ -149,15 +151,54 @@ public class Parser {
     // subroutineCall -> subroutineName '(' expressionList ')' | (className|varName)
     // '.' subroutineName '(' expressionList ')
     public void parseSubroutineCall() {
-       expectPeek(TokenType.IDENT);
-       expectPeek(TokenType.LPAREN);
-       expectPeek(TokenType.RPAREN);
+        var nArgs = 0;
+
+        var ident = currentToken.value();
+        var functionName = ident + ".";
+
+        if (peekTokenIs(TokenType.LPAREN)) { // método da propria classe
+            expectPeek(TokenType.LPAREN);
+            nArgs = parseExpressionList() + 1;
+            expectPeek(TokenType.RPAREN);
+            functionName = className + "." + ident;
+        } else {
+            // pode ser um metodo de um outro objeto ou uma função
+            expectPeek(TokenType.DOT);
+            expectPeek(TokenType.IDENT); // nome da função
+
+            expectPeek(TokenType.LPAREN);
+            nArgs += parseExpressionList();
+
+            expectPeek(TokenType.RPAREN);
+        }
     }
-    
+
+    int parseExpressionList() {
+        printNonTerminal("expressionList");
+
+        var nArgs = 0;
+
+        if (!peekTokenIs(TokenType.RPAREN)) // verifica se tem pelo menos uma expressao
+        {
+            parseExpression();
+            nArgs = 1;
+        }
+
+        // procurando as demais
+        while (peekTokenIs(TokenType.COMMA)) {
+            expectPeek(TokenType.COMMA);
+            parseExpression();
+            nArgs++;
+        }
+
+        printNonTerminal("/expressionList");
+        return nArgs;
+    }
     // 'do' subroutineCall ';'
     public void parseDo() {
         printNonTerminal("doStatement");
         expectPeek(TokenType.DO);
+        expectPeek(TokenType.IDENT);
         parseSubroutineCall();
         expectPeek(TokenType.SEMICOLON);
         printNonTerminal("/doStatement");

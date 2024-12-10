@@ -73,6 +73,29 @@ public class ParserTest  extends TestSupport {
     }
 
     @Test
+    public void testParseDo() {
+        var input = "do hello();";
+        var parser = new Parser(input.getBytes(StandardCharsets.UTF_8));
+        parser.parseDo();
+
+        var expectedResult = """
+            <doStatement>
+            <keyword> do </keyword>
+            <identifier> hello </identifier>
+            <symbol> ( </symbol>
+            <expressionList>
+            </expressionList>
+            <symbol> ) </symbol>
+            <symbol> ; </symbol>
+          </doStatement>
+                """;
+        var result = parser.XMLOutput();
+        expectedResult = expectedResult.replaceAll("  ", "");
+        result = result.replaceAll("\r", ""); // no codigo em linux não tem o retorno de carro
+        assertEquals(expectedResult, result);
+    }
+
+    @Test
     public void testParseExpressionSimple() {
         var input = "10+20-10*3/2";
         var parser = new Parser(input.getBytes(StandardCharsets.UTF_8));
@@ -221,6 +244,7 @@ public class ParserTest  extends TestSupport {
         var functionName = "this.a";
 
         parser.parseSubroutineBody(functionName, TokenType.CONSTRUCTOR);
+        
         var expectedResult = """
             <subroutineBody>
               <symbol> { </symbol>
@@ -314,7 +338,6 @@ public class ParserTest  extends TestSupport {
         expectedResult = expectedResult.replaceAll("  ", "");
         assertEquals(expectedResult, result);
     }
-
 
     @Test
     public void testParserWithSquare() throws IOException {
