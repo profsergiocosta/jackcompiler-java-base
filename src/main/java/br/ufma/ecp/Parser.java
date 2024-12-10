@@ -1,6 +1,8 @@
 package br.ufma.ecp;
 
+import static br.ufma.ecp.token.TokenType.CONSTRUCTOR;
 import static br.ufma.ecp.token.TokenType.IDENT;
+import static br.ufma.ecp.token.TokenType.METHOD;
 
 import javax.swing.text.Segment;
 
@@ -86,10 +88,38 @@ public class Parser {
     public void parseSubroutineBody(String functionName, TokenType subroutineType) {
 
         printNonTerminal("subroutineBody");
-        //expectPeek(TokenType.LBRACE);
+        expectPeek(TokenType.LBRACE);
 
-       // expectPeek(TokenType.RBRACE);
+        while (peekTokenIs(TokenType.VAR)) {
+            parseVarDec();
+        }
+
+        parseStatements();
+        expectPeek(TokenType.RBRACE);
         printNonTerminal("/subroutineBody");
+    }
+
+    public void parseVarDec(){
+        printNonTerminal("varDec");
+        expectPeek(TokenType.VAR);
+
+        // 'int' | 'char' | 'boolean' | className
+        expectPeek(TokenType.INT, TokenType.CHAR, TokenType.BOOLEAN, TokenType.IDENT);
+
+        expectPeek(TokenType.IDENT);
+
+        while (peekTokenIs(TokenType.COMMA)) {
+            expectPeek(TokenType.COMMA);
+            expectPeek(TokenType.IDENT);
+        }
+
+        expectPeek(TokenType.SEMICOLON);
+        printNonTerminal("/varDec");
+
+    }
+
+    public void parseStatements(){
+
     }
 
     public void parseTerm() {
@@ -173,7 +203,7 @@ public class Parser {
         }
     }
 
-    int parseExpressionList() {
+    public int parseExpressionList() {
         printNonTerminal("expressionList");
 
         var nArgs = 0;
@@ -204,7 +234,7 @@ public class Parser {
         printNonTerminal("/doStatement");
      }
 
-    void parseStatement() {
+    public void parseStatement() {
         switch (peekToken.type) {
             case LET:
                 parseLet();
