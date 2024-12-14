@@ -42,6 +42,26 @@ public class Parser {
         // parseClass();
     }
 
+    public void parseClass() {
+        printNonTerminal("class");
+        expectPeek(TokenType.CLASS);
+        expectPeek(TokenType.IDENT);
+        className = currentToken.value();
+        expectPeek(TokenType.LBRACE);
+
+        while (peekTokenIs(TokenType.STATIC) || peekTokenIs(TokenType.FIELD)) {
+            parseClassVarDec();
+        }
+
+        while (peekTokenIs(TokenType.FUNCTION) || peekTokenIs(TokenType.CONSTRUCTOR) || peekTokenIs(TokenType.METHOD)) {
+            parseSubroutineDec();
+        }
+
+        expectPeek(TokenType.RBRACE);
+
+        printNonTerminal("/class");
+    }
+
     // classVarDec → ( 'static' | 'field' ) type varName ( ',' varName)* ';'
     public void parseClassVarDec() {
         printNonTerminal("classVarDec");
