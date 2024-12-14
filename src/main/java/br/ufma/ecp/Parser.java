@@ -8,6 +8,19 @@ import static br.ufma.ecp.token.TokenType.LET;
 import static br.ufma.ecp.token.TokenType.METHOD;
 import static br.ufma.ecp.token.TokenType.RETURN;
 import static br.ufma.ecp.token.TokenType.WHILE;
+import static br.ufma.ecp.token.TokenType.STRING;
+import static br.ufma.ecp.token.TokenType.INT;
+import static br.ufma.ecp.token.TokenType.FALSE;
+import static br.ufma.ecp.token.TokenType.THIS;
+import static br.ufma.ecp.token.TokenType.NULL;
+import static br.ufma.ecp.token.TokenType.TRUE;
+import static br.ufma.ecp.token.TokenType.LBRACKET;
+import static br.ufma.ecp.token.TokenType.LPAREN;
+import static br.ufma.ecp.token.TokenType.MINUS;
+import static br.ufma.ecp.token.TokenType.NOT;
+import static br.ufma.ecp.token.TokenType.DOT;
+import static br.ufma.ecp.token.TokenType.RBRACKET;
+import static br.ufma.ecp.token.TokenType.RPAREN;
 
 import javax.swing.text.Segment;
 
@@ -145,27 +158,46 @@ public class Parser {
     public void parseTerm() {
         printNonTerminal("term");
         switch (peekToken.type) {
-            case NUMBER:
-                expectPeek(TokenType.NUMBER);
+            case INT:
+                expectPeek(INT);
                 break;
             case STRING:
-                expectPeek(TokenType.STRING);
+                expectPeek(STRING);
                 break;
             case FALSE:
             case NULL:
             case TRUE:
-                expectPeek(TokenType.FALSE, TokenType.NULL, TokenType.TRUE);
+                expectPeek(FALSE, NULL, TRUE);
                 break;
             case THIS:
-                expectPeek(TokenType.THIS);
+                expectPeek(THIS);
                 break;
             case IDENT:
-                expectPeek(TokenType.IDENT);
+                expectPeek(IDENT);
+                if (peekTokenIs(LPAREN) || peekTokenIs(DOT)) {
+                    parseSubroutineCall();
+                } else { // variavel comum ou array
+                    if (peekTokenIs(LBRACKET)) { // array
+                        expectPeek(LBRACKET);
+                        parseExpression();
+                        expectPeek(RBRACKET);
+
+                    }
+                }
+                break;
+            case LPAREN:
+                expectPeek(LPAREN);
+                parseExpression();
+                expectPeek(RPAREN);
+                break;
+            case MINUS:
+            case NOT:
+                expectPeek(MINUS, NOT);
+                parseTerm();
                 break;
             default:
                 throw error(peekToken, "term expected");
         }
-
         printNonTerminal("/term");
     }
 
