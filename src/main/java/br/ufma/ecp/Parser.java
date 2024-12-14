@@ -309,6 +309,31 @@ public class Parser {
         printNonTerminal("/ifStatement");
     }
 
+
+    public void parseSubroutineDec() {
+        printNonTerminal("subroutineDec");     
+
+        ifLabelNum = 0;
+        whileLabelNum = 0;
+
+        expectPeek(TokenType.CONSTRUCTOR, TokenType.FUNCTION, TokenType.METHOD);
+
+        var subroutineType = currentToken.type;
+
+        // 'int' | 'char' | 'boolean' | className
+        expectPeek(TokenType.VOID, TokenType.INT, TokenType.CHAR, TokenType.BOOLEAN, TokenType.IDENT);
+        expectPeek(TokenType.IDENT);
+
+        var functionName = className + "." + currentToken.value();
+
+        expectPeek(TokenType.LPAREN);
+        parseParameterList();
+        expectPeek(TokenType.RPAREN);
+        parseSubroutineBody(functionName, subroutineType);
+
+        printNonTerminal("/subroutineDec");
+    }
+
     // funções auxiliares
     public String XMLOutput() {
         return xmlOutput.toString();
