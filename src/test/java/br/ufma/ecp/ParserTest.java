@@ -32,7 +32,6 @@ public class ParserTest  extends TestSupport {
 
     }
 
-
     @Test
     public void testParseTermIdentifer() {
         var input = "varName;";
@@ -51,8 +50,6 @@ public class ParserTest  extends TestSupport {
           assertEquals(expectedResult, result);    
   
     }
-
-
 
     @Test
     public void testParseTermString() {
@@ -160,7 +157,6 @@ public class ParserTest  extends TestSupport {
         result = result.replaceAll("\r", ""); // no codigo em linux não tem o retorno de carro
         assertEquals(expectedResult, result);
     }
-
 
     @Test
     public void testParseSubroutineCall() {
@@ -332,6 +328,65 @@ public class ParserTest  extends TestSupport {
         assertEquals(expectedResult, result);
 
     }
+      @Test
+  public void testParseWhile() {
+    var input = """
+                while (key = 0) {
+                  let key = 10;
+                        do moveSquare();
+                }""";
+
+    var parser = new Parser(input.getBytes(StandardCharsets.UTF_8));
+    parser.parseWhile();
+    var expectedResult = """
+            <whileStatement>
+              <keyword> while </keyword>
+              <symbol> ( </symbol>
+              <expression>
+                <term>
+                  <identifier> key </identifier>
+                </term>
+                <symbol> = </symbol>
+                <term>
+                  <integerConstant> 0 </integerConstant>
+                </term>
+              </expression>
+              <symbol> ) </symbol>
+              <symbol> { </symbol>
+              <statements>
+                <letStatement>
+                  <keyword> let </keyword>
+                  <identifier> key </identifier>
+                  <symbol> = </symbol>
+                  <expression>
+                    <term>
+                      <integerConstant> 10 </integerConstant>
+                    </term>
+                  </expression>
+                  <symbol> ; </symbol>
+                </letStatement>
+                <doStatement>
+                  <keyword> do </keyword>
+                  <identifier> moveSquare </identifier>
+                  <symbol> ( </symbol>
+                  <expressionList>
+                  </expressionList>
+                  <symbol> ) </symbol>
+                  <symbol> ; </symbol>
+                </doStatement>
+              </statements>
+              <symbol> } </symbol>
+            </whileStatement>
+        """;
+    var result = parser.XMLOutput();
+    expectedResult = expectedResult.replaceAll("  ", "");
+    result = result.replaceAll("\r", ""); // no codigo em linux não tem o retorno de carro
+    assertEquals(expectedResult, result);
+
+  }
+
+
+
     
     // Testes finais
     
