@@ -206,12 +206,12 @@ public class Parser {
         printNonTerminal("expression");
         parseTerm();
         while (isOperator(peekToken.lexeme)) {
+            var op = peekToken.type;
             expectPeek(peekToken.type);
             parseTerm();
         }
         printNonTerminal("/expression");
     }
-
     
     // letStatement -> 'let' identifier( '[' expression ']' )? '=' expression ';'
     public void parseLet() {
