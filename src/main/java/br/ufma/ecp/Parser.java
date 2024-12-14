@@ -1,6 +1,13 @@
 package br.ufma.ecp;
 
+import static br.ufma.ecp.token.TokenType.CONSTRUCTOR;
+import static br.ufma.ecp.token.TokenType.DO;
 import static br.ufma.ecp.token.TokenType.IDENT;
+import static br.ufma.ecp.token.TokenType.IF;
+import static br.ufma.ecp.token.TokenType.LET;
+import static br.ufma.ecp.token.TokenType.METHOD;
+import static br.ufma.ecp.token.TokenType.RETURN;
+import static br.ufma.ecp.token.TokenType.WHILE;
 
 import javax.swing.text.Segment;
 
@@ -17,7 +24,7 @@ public class Parser {
     private Token peekToken;
     private StringBuilder xmlOutput = new StringBuilder();
 
-    private String className; //nome dae uma class
+    private String className; // nome dae uma class
     private int ifLabelNum; // contador de if
     private int whileLabelNum;// contador de while
 
@@ -32,7 +39,7 @@ public class Parser {
     }
 
     public void parse() {
-       // parseClass();
+        // parseClass();
     }
 
     // classVarDec → ( 'static' | 'field' ) type varName ( ',' varName)* ';'
@@ -85,11 +92,38 @@ public class Parser {
 
     public void parseSubroutineBody(String functionName, TokenType subroutineType) {
 
-        printNonTerminal("subroutineBody");
-        //expectPeek(TokenType.LBRACE);
+    }
 
-       // expectPeek(TokenType.RBRACE);
-        printNonTerminal("/subroutineBody");
+    public void parseVarDec() {
+        printNonTerminal("varDec");
+        expectPeek(TokenType.VAR);
+
+        // 'int' | 'char' | 'boolean' | className
+        expectPeek(TokenType.INT, TokenType.CHAR, TokenType.BOOLEAN, TokenType.IDENT);
+
+        expectPeek(TokenType.IDENT);
+
+        while (peekTokenIs(TokenType.COMMA)) {
+            expectPeek(TokenType.COMMA);
+            expectPeek(TokenType.IDENT);
+        }
+
+        expectPeek(TokenType.SEMICOLON);
+        printNonTerminal("/varDec");
+
+    }
+
+    public void parseStatements() {
+        printNonTerminal("statements");
+        while (peekToken.type == WHILE ||
+                peekToken.type == IF ||
+                peekToken.type == LET ||
+                peekToken.type == DO ||
+                peekToken.type == RETURN) {
+            parseStatement();
+        }
+
+        printNonTerminal("/statements");
     }
 
     public void parseTerm() {
@@ -129,7 +163,7 @@ public class Parser {
         }
         printNonTerminal("/expression");
     }
-    
+
     // letStatement -> 'let' identifier( '[' expression ']' )? '=' expression ';'
     public void parseLet() {
         printNonTerminal("letStatement");
@@ -173,7 +207,7 @@ public class Parser {
         }
     }
 
-    int parseExpressionList() {
+    public int parseExpressionList() {
         printNonTerminal("expressionList");
 
         var nArgs = 0;
@@ -194,6 +228,7 @@ public class Parser {
         printNonTerminal("/expressionList");
         return nArgs;
     }
+
     // 'do' subroutineCall ';'
     public void parseDo() {
         printNonTerminal("doStatement");
@@ -202,21 +237,21 @@ public class Parser {
         parseSubroutineCall();
         expectPeek(TokenType.SEMICOLON);
         printNonTerminal("/doStatement");
-     }
+    }
 
-    void parseStatement() {
+    public void parseStatement() {
         switch (peekToken.type) {
             case LET:
                 parseLet();
                 break;
             case WHILE:
-               // parseWhile();
+                 parseWhile();
                 break;
             case IF:
-               // parseIf();
+                 parseIf();
                 break;
             case RETURN:
-                //parseReturn();
+                 parseReturn();
                 break;
             case DO:
                 parseDo();
@@ -225,7 +260,6 @@ public class Parser {
                 throw error(peekToken, "Expected a statement");
         }
     }
-
 
     // funções auxiliares
     public String XMLOutput() {
@@ -247,7 +281,7 @@ public class Parser {
     boolean currentTokenIs(TokenType type) {
         return currentToken.type == type;
     }
-    
+
     private void expectPeek(TokenType... types) {
         for (TokenType type : types) {
             if (peekToken.type == type) {
@@ -283,6 +317,5 @@ public class Parser {
         }
         return new ParseError();
     }
-
 
 }
