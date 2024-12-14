@@ -52,9 +52,9 @@ public class Parser {
     }
 
     public void parse() {
-        // parseClass();
+        parseClass();
     }
-
+    
     public void parseClass() {
         printNonTerminal("class");
         expectPeek(TokenType.CLASS);
@@ -154,12 +154,15 @@ public class Parser {
 
         printNonTerminal("/statements");
     }
-
+    
     public void parseTerm() {
         printNonTerminal("term");
         switch (peekToken.type) {
             case INT:
                 expectPeek(INT);
+                break;
+            case NUMBER:
+                expectPeek(TokenType.NUMBER);
                 break;
             case STRING:
                 expectPeek(STRING);
@@ -196,9 +199,34 @@ public class Parser {
                 parseTerm();
                 break;
             default:
+            System.err.println(peekToken.type);
                 throw error(peekToken, "term expected");
         }
         printNonTerminal("/term");
+    }
+
+    public void parseSubroutineDec() {
+        printNonTerminal("subroutineDec");     
+
+        ifLabelNum = 0;
+        whileLabelNum = 0;
+
+        expectPeek(TokenType.CONSTRUCTOR, TokenType.FUNCTION, TokenType.METHOD);
+
+        var subroutineType = currentToken.type;
+
+        // 'int' | 'char' | 'boolean' | className
+        expectPeek(TokenType.VOID, TokenType.INT, TokenType.CHAR, TokenType.BOOLEAN, TokenType.IDENT);
+        expectPeek(TokenType.IDENT);
+
+        var functionName = className + "." + currentToken.value();
+
+        expectPeek(TokenType.LPAREN);
+        parseParameterList();
+        expectPeek(TokenType.RPAREN);
+        parseSubroutineBody(functionName, subroutineType);
+
+        printNonTerminal("/subroutineDec");
     }
 
     // expression -> term (op term)*
@@ -206,58 +234,58 @@ public class Parser {
         printNonTerminal("expression");
         parseTerm();
         while (isOperator(peekToken.lexeme)) {
-            var op = peekToken.type;
             expectPeek(peekToken.type);
             parseTerm();
         }
         printNonTerminal("/expression");
     }
-    
-    // letStatement -> 'let' identifier( '[' expression ']' )? '=' expression ';'
-    public void parseLet() {
 
-        var isArray = false;
+   // letStatement -> 'let' identifier( '[' expression ']' )? '=' expression ';'
+   public void parseLet() {
 
-        printNonTerminal("letStatement");
-        expectPeek(TokenType.LET);
-        expectPeek(TokenType.IDENT);
+    var isArray = false;
 
-        if (peekTokenIs(TokenType.LBRACKET)) { // array
-            expectPeek(TokenType.LBRACKET);
-            parseExpression();
-            expectPeek(TokenType.RBRACKET);
-            isArray = true;
-        }
+    printNonTerminal("letStatement");
+    expectPeek(TokenType.LET);
+    expectPeek(TokenType.IDENT);
 
-        expectPeek(TokenType.EQ);
+    if (peekTokenIs(TokenType.LBRACKET)) { // array
+        expectPeek(TokenType.LBRACKET);
         parseExpression();
-
-        expectPeek(TokenType.SEMICOLON);
-        printNonTerminal("/letStatement");
+        expectPeek(TokenType.RBRACKET);
+        isArray = true;
     }
 
+    expectPeek(TokenType.EQ);
+    parseExpression();
+
+    expectPeek(TokenType.SEMICOLON);
+    printNonTerminal("/letStatement");
+}
+    
     // subroutineCall -> subroutineName '(' expressionList ')' | (className|varName)
     // '.' subroutineName '(' expressionList ')
-    public void parseSubroutineCall() {
+    void parseSubroutineCall() {
+
         var nArgs = 0;
 
         var ident = currentToken.value();
         var functionName = ident + ".";
 
-        if (peekTokenIs(TokenType.LPAREN)) { // método da propria classe
-            expectPeek(TokenType.LPAREN);
+        if (peekTokenIs(LPAREN)) { // método da propria classe
+            expectPeek(LPAREN);
             nArgs = parseExpressionList() + 1;
-            expectPeek(TokenType.RPAREN);
+            expectPeek(RPAREN);
             functionName = className + "." + ident;
         } else {
             // pode ser um metodo de um outro objeto ou uma função
-            expectPeek(TokenType.DOT);
-            expectPeek(TokenType.IDENT); // nome da função
+            expectPeek(DOT);
+            expectPeek(IDENT); // nome da função
 
-            expectPeek(TokenType.LPAREN);
+            expectPeek(LPAREN);
             nArgs += parseExpressionList();
 
-            expectPeek(TokenType.RPAREN);
+            expectPeek(RPAREN);
         }
     }
 
@@ -365,31 +393,6 @@ public class Parser {
         }
 
         printNonTerminal("/ifStatement");
-    }
-
-
-    public void parseSubroutineDec() {
-        printNonTerminal("subroutineDec");     
-
-        ifLabelNum = 0;
-        whileLabelNum = 0;
-
-        expectPeek(TokenType.CONSTRUCTOR, TokenType.FUNCTION, TokenType.METHOD);
-
-        var subroutineType = currentToken.type;
-
-        // 'int' | 'char' | 'boolean' | className
-        expectPeek(TokenType.VOID, TokenType.INT, TokenType.CHAR, TokenType.BOOLEAN, TokenType.IDENT);
-        expectPeek(TokenType.IDENT);
-
-        var functionName = className + "." + currentToken.value();
-
-        expectPeek(TokenType.LPAREN);
-        parseParameterList();
-        expectPeek(TokenType.RPAREN);
-        parseSubroutineBody(functionName, subroutineType);
-
-        printNonTerminal("/subroutineDec");
     }
 
     // funções auxiliares
