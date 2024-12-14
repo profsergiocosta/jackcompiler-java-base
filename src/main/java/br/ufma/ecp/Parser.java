@@ -115,11 +115,11 @@ public class Parser {
 
     public void parseStatements() {
         printNonTerminal("statements");
-        while (peekToken.type == WHILE ||
-                peekToken.type == IF ||
-                peekToken.type == LET ||
-                peekToken.type == DO ||
-                peekToken.type == RETURN) {
+        while (peekToken.type == TokenType.WHILE ||
+                peekToken.type == TokenType.IF ||
+                peekToken.type == TokenType.LET ||
+                peekToken.type == TokenType.DO ||
+                peekToken.type == TokenType.RETURN) {
             parseStatement();
         }
 
@@ -241,19 +241,19 @@ public class Parser {
 
     public void parseStatement() {
         switch (peekToken.type) {
-            case LET:
+            case TokenType.LET:
                 parseLet();
                 break;
-            case WHILE:
+            case TokenType.WHILE:
                  parseWhile();
                 break;
-            case IF:
+            case TokenType.IF:
                  parseIf();
                 break;
-            case RETURN:
+            case TokenType.RETURN:
                  parseReturn();
                 break;
-            case DO:
+            case TokenType.DO:
                 parseDo();
                 break;
             default:
