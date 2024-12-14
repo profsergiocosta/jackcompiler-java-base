@@ -237,23 +237,23 @@ public class Parser {
 
     public void parseStatement() {
         switch (peekToken.type) {
-            case TokenType.LET:
+            case LET:
                 parseLet();
                 break;
-            case TokenType.WHILE:
+            case WHILE:
                  parseWhile();
                 break;
-            case TokenType.IF:
+            case IF:
                  parseIf();
                 break;
-            case TokenType.RETURN:
+            case RETURN:
                  parseReturn();
                 break;
-            case TokenType.DO:
+            case DO:
                 parseDo();
                 break;
             default:
-                throw error(peekToken.type, "Expected a statement");
+                throw error(peekToken, "Expected a statement");
         }
     }
 
