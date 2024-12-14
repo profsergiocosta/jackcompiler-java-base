@@ -314,7 +314,7 @@ public class ParserTest  extends TestSupport {
 
     @Test
     public void testParseVarDec(){
-      var input = "var Strinng s;";
+      var input = "var String s;";
         var parser = new Parser(input.getBytes(StandardCharsets.UTF_8));
         parser.parseVarDec();
 				var expectedResult =  """
