@@ -12,237 +12,456 @@ import br.ufma.ecp.token.Token;
 
 import br.ufma.ecp.token.TokenType;
 
-public class ParserTest  extends TestSupport {
+public class ParserTest extends TestSupport {
 
-    @Test
-    public void testParseTermInteger () {
-      var input = "10;";
-      var parser = new Parser(input.getBytes(StandardCharsets.UTF_8));
-      parser.parseTerm();
-      var expectedResult =  """
+  @Test
+  public void testParseTermInteger() {
+    var input = "10;";
+    var parser = new Parser(input.getBytes(StandardCharsets.UTF_8));
+    parser.parseTerm();
+    var expectedResult = """
         <term>
         <integerConstant> 10 </integerConstant>
         </term>
         """;
-            
-        var result = parser.XMLOutput();
-        expectedResult = expectedResult.replaceAll("  ", "");
-        result = result.replaceAll("\r", ""); // no codigo em linux não tem o retorno de carro
-        assertEquals(expectedResult, result);    
 
-    }
+    var result = parser.XMLOutput();
+    expectedResult = expectedResult.replaceAll("  ", "");
+    result = result.replaceAll("\r", ""); // no codigo em linux não tem o retorno de carro
+    assertEquals(expectedResult, result);
 
-    @Test
-    public void testParseTermIdentifer() {
-        var input = "varName;";
-        var parser = new Parser(input.getBytes(StandardCharsets.UTF_8));
-        parser.parseTerm();
-      
-        var expectedResult =  """
-          <term>
-          <identifier> varName </identifier>
-          </term>
-          """;
-              
-          var result = parser.XMLOutput();
-          expectedResult = expectedResult.replaceAll("  ", "");
-          result = result.replaceAll("\r", ""); // no codigo em linux não tem o retorno de carro
-          assertEquals(expectedResult, result);    
-  
-    }
+  }
 
-    @Test
-    public void testParseTermString() {
-        var input = "\"Hello World\"";
-        var parser = new Parser(input.getBytes(StandardCharsets.UTF_8));
-        parser.parseTerm();
-    
-        var expectedResult =  """
-          <term>
-          <stringConstant> Hello World </stringConstant>
-          </term>
-          """;
-              
-          var result = parser.XMLOutput();
-          expectedResult = expectedResult.replaceAll("  ", "");
-          result = result.replaceAll("\r", ""); // no codigo em linux não tem o retorno de carro
-          assertEquals(expectedResult, result);    
-  
-    }
+  @Test
+  public void testParseTermIdentifer() {
+    var input = "varName;";
+    var parser = new Parser(input.getBytes(StandardCharsets.UTF_8));
+    parser.parseTerm();
 
-    @Test
-    public void testParseDo() {
-        var input = "do hello();";
-        var parser = new Parser(input.getBytes(StandardCharsets.UTF_8));
-        parser.parseDo();
+    var expectedResult = """
+        <term>
+        <identifier> varName </identifier>
+        </term>
+        """;
 
-        var expectedResult = """
-            <doStatement>
-            <keyword> do </keyword>
-            <identifier> hello </identifier>
-            <symbol> ( </symbol>
-            <expressionList>
-            </expressionList>
-            <symbol> ) </symbol>
-            <symbol> ; </symbol>
-          </doStatement>
-                """;
-        var result = parser.XMLOutput();
-        expectedResult = expectedResult.replaceAll("  ", "");
-        result = result.replaceAll("\r", ""); // no codigo em linux não tem o retorno de carro
-        assertEquals(expectedResult, result);
-    }
+    var result = parser.XMLOutput();
+    expectedResult = expectedResult.replaceAll("  ", "");
+    result = result.replaceAll("\r", ""); // no codigo em linux não tem o retorno de carro
+    assertEquals(expectedResult, result);
 
-    @Test
-    public void testParseExpressionSimple() {
-        var input = "10+20-10*3/2";
-        var parser = new Parser(input.getBytes(StandardCharsets.UTF_8));
-        parser.parseExpression();
-        
-        var expectedResult =  """
-          <expression>
-          <term>
-          <integerConstant> 10 </integerConstant>
-          </term>
-          <symbol> + </symbol>
-          <term>
-          <integerConstant> 20 </integerConstant>
-          </term>
-          <symbol> - </symbol>
-          <term>
-          <integerConstant> 10 </integerConstant>
-          </term>
-          <symbol> * </symbol>
-          <term>
-          <integerConstant> 3 </integerConstant>
-          </term>
-          <symbol> / </symbol>
-          <term>
-          <integerConstant> 2 </integerConstant>
-          </term>
-          </expression>
-          """;
-              
-          var result = parser.XMLOutput();
-          result = result.replaceAll("\r", ""); 
-          expectedResult = expectedResult.replaceAll("  ", "");
-          assertEquals(expectedResult, result);    
+  }
 
-    }
+  @Test
+  public void testParseTermString() {
+    var input = "\"Hello World\"";
+    var parser = new Parser(input.getBytes(StandardCharsets.UTF_8));
+    parser.parseTerm();
 
-    @Test
-    public void testParseLetSimple() {
-        var input = "let var1 = 10+20;";
-        var parser = new Parser(input.getBytes(StandardCharsets.UTF_8));
-        parser.parseLet();
-				var expectedResult =  """
-	     <letStatement>
-        <keyword> let </keyword>
-        <identifier> var1 </identifier>
-        <symbol> = </symbol>
-        <expression>
-          <term>
-          <integerConstant> 10 </integerConstant>
-          </term>
-          <symbol> + </symbol>
-          <term>
-          <integerConstant> 20 </integerConstant>
-          </term>
-          </expression>
-        <symbol> ; </symbol>
-      </letStatement> 
-				""";
-        var result = parser.XMLOutput();
-        expectedResult = expectedResult.replaceAll("  ", "");
-        result = result.replaceAll("\r", ""); // no codigo em linux não tem o retorno de carro
-        assertEquals(expectedResult, result);
-    }
+    var expectedResult = """
+        <term>
+        <stringConstant> Hello World </stringConstant>
+        </term>
+        """;
 
-    @Test
-    public void testParseSubroutineCall() {
-        var input = "hello()";
-        var parser = new Parser(input.getBytes(StandardCharsets.UTF_8));
-        parser.parseSubroutineCall();
-        
-        var expectedResult =  """
+    var result = parser.XMLOutput();
+    expectedResult = expectedResult.replaceAll("  ", "");
+    result = result.replaceAll("\r", ""); // no codigo em linux não tem o retorno de carro
+    assertEquals(expectedResult, result);
+
+  }
+
+  @Test
+  public void testParseDo() {
+    var input = "do hello();";
+    var parser = new Parser(input.getBytes(StandardCharsets.UTF_8));
+    parser.parseDo();
+
+    var expectedResult = """
+          <doStatement>
+          <keyword> do </keyword>
           <identifier> hello </identifier>
           <symbol> ( </symbol>
+          <expressionList>
+          </expressionList>
           <symbol> ) </symbol>
-          """;
-              
-          var result = parser.XMLOutput();
-          result = result.replaceAll("\r", ""); 
-          expectedResult = expectedResult.replaceAll("  ", "");
-          assertEquals(expectedResult, result);    
+          <symbol> ; </symbol>
+        </doStatement>
+              """;
+    var result = parser.XMLOutput();
+    expectedResult = expectedResult.replaceAll("  ", "");
+    result = result.replaceAll("\r", ""); // no codigo em linux não tem o retorno de carro
+    assertEquals(expectedResult, result);
+  }
 
-    }
+  @Test
+  public void testParseExpressionSimple() {
+    var input = "10+20-10*3/2";
+    var parser = new Parser(input.getBytes(StandardCharsets.UTF_8));
+    parser.parseExpression();
 
-    @Test
-    public void testParseClassVarDec() {
-        var input = "field Square square;";
-        var parser = new Parser(input.getBytes(StandardCharsets.UTF_8));
-        parser.parseClassVarDec();
-        var expectedResult = """
-            <classVarDec>
-            <keyword> field </keyword>
-            <identifier> Square </identifier>
-            <identifier> square </identifier>
+    var expectedResult = """
+        <expression>
+        <term>
+        <integerConstant> 10 </integerConstant>
+        </term>
+        <symbol> + </symbol>
+        <term>
+        <integerConstant> 20 </integerConstant>
+        </term>
+        <symbol> - </symbol>
+        <term>
+        <integerConstant> 10 </integerConstant>
+        </term>
+        <symbol> * </symbol>
+        <term>
+        <integerConstant> 3 </integerConstant>
+        </term>
+        <symbol> / </symbol>
+        <term>
+        <integerConstant> 2 </integerConstant>
+        </term>
+        </expression>
+        """;
+
+    var result = parser.XMLOutput();
+    result = result.replaceAll("\r", "");
+    expectedResult = expectedResult.replaceAll("  ", "");
+    assertEquals(expectedResult, result);
+
+  }
+
+  @Test
+  public void testParseLetSimple() {
+    var input = "let var1 = 10+20;";
+    var parser = new Parser(input.getBytes(StandardCharsets.UTF_8));
+    parser.parseLet();
+    var expectedResult = """
+          <letStatement>
+            <keyword> let </keyword>
+            <identifier> var1 </identifier>
+            <symbol> = </symbol>
+            <expression>
+              <term>
+              <integerConstant> 10 </integerConstant>
+              </term>
+              <symbol> + </symbol>
+              <term>
+              <integerConstant> 20 </integerConstant>
+              </term>
+              </expression>
             <symbol> ; </symbol>
-          </classVarDec>
-                """;
+          </letStatement>
+        """;
+    var result = parser.XMLOutput();
+    expectedResult = expectedResult.replaceAll("  ", "");
+    result = result.replaceAll("\r", ""); // no codigo em linux não tem o retorno de carro
+    assertEquals(expectedResult, result);
+  }
 
-        var result = parser.XMLOutput();
-        expectedResult = expectedResult.replaceAll("  ", "");
-        result = result.replaceAll("\r", ""); // no codigo em linux não tem o retorno de carro
-        assertEquals(expectedResult, result);
-    }
+  @Test
+  public void testParseSubroutineCall() {
+    var input = "hello()";
+    var parser = new Parser(input.getBytes(StandardCharsets.UTF_8));
+    parser.parseSubroutineCall();
 
-    @Test
-    public void testParseParameterList() {
-        var input = """
-            int Ax, int Ay, int Asize
-                """;
-                
-        var parser = new Parser(input.getBytes(StandardCharsets.UTF_8));
-        parser.parseParameterList();
-        var expectedResult = """
-            <parameterList>
-              <keyword> int </keyword>
-              <identifier> Ax </identifier>
-              <symbol> , </symbol>
-              <keyword> int </keyword>
-              <identifier> Ay </identifier>
-              <symbol> , </symbol>
-              <keyword> int </keyword>
-              <identifier> Asize </identifier>
-            </parameterList>
-                """;
+    var expectedResult = """
+        <identifier> hello </identifier>
+        <symbol> ( </symbol>
+        <symbol> ) </symbol>
+        """;
 
-        var result = parser.XMLOutput();
-        expectedResult = expectedResult.replaceAll("  ", "");
-        result = result.replaceAll("\r", ""); // no codigo em linux não tem o retorno de carro
-        assertEquals(expectedResult, result);
-    }
+    var result = parser.XMLOutput();
+    result = result.replaceAll("\r", "");
+    expectedResult = expectedResult.replaceAll("  ", "");
+    assertEquals(expectedResult, result);
 
-     @Test
-    public void testParseSubroutineBody() {
-      var input = """
-          {
-              let x = Ax;
-              let y = Ay;
-              let size = Asize;
-              do draw();
-              return this;
-          }
+  }
+
+  @Test
+  public void testParseClassVarDec() {
+    var input = "field Square square;";
+    var parser = new Parser(input.getBytes(StandardCharsets.UTF_8));
+    parser.parseClassVarDec();
+    var expectedResult = """
+          <classVarDec>
+          <keyword> field </keyword>
+          <identifier> Square </identifier>
+          <identifier> square </identifier>
+          <symbol> ; </symbol>
+        </classVarDec>
               """;
 
-      var parser = new Parser(input.getBytes(StandardCharsets.UTF_8));
+    var result = parser.XMLOutput();
+    expectedResult = expectedResult.replaceAll("  ", "");
+    result = result.replaceAll("\r", ""); // no codigo em linux não tem o retorno de carro
+    assertEquals(expectedResult, result);
+  }
 
-      var functionName = "this.a";
+  @Test
+  public void testParseParameterList() {
+    var input = """
+        int Ax, int Ay, int Asize
+            """;
 
-      parser.parseSubroutineBody(functionName, TokenType.CONSTRUCTOR);
+    var parser = new Parser(input.getBytes(StandardCharsets.UTF_8));
+    parser.parseParameterList();
+    var expectedResult = """
+        <parameterList>
+          <keyword> int </keyword>
+          <identifier> Ax </identifier>
+          <symbol> , </symbol>
+          <keyword> int </keyword>
+          <identifier> Ay </identifier>
+          <symbol> , </symbol>
+          <keyword> int </keyword>
+          <identifier> Asize </identifier>
+        </parameterList>
+            """;
 
-      var expectedResult = """
+    var result = parser.XMLOutput();
+    expectedResult = expectedResult.replaceAll("  ", "");
+    result = result.replaceAll("\r", ""); // no codigo em linux não tem o retorno de carro
+    assertEquals(expectedResult, result);
+  }
+
+  @Test
+  public void testParseSubroutineBody() {
+    var input = """
+        {
+            let x = Ax;
+            let y = Ay;
+            let size = Asize;
+            do draw();
+            return this;
+        }
+            """;
+
+    var parser = new Parser(input.getBytes(StandardCharsets.UTF_8));
+
+    var functionName = "this.a";
+
+    parser.parseSubroutineBody(functionName, TokenType.CONSTRUCTOR);
+
+    var expectedResult = """
+        <subroutineBody>
+          <symbol> { </symbol>
+          <statements>
+            <letStatement>
+              <keyword> let </keyword>
+              <identifier> x </identifier>
+              <symbol> = </symbol>
+              <expression>
+                <term>
+                  <identifier> Ax </identifier>
+                </term>
+              </expression>
+              <symbol> ; </symbol>
+            </letStatement>
+            <letStatement>
+              <keyword> let </keyword>
+              <identifier> y </identifier>
+              <symbol> = </symbol>
+              <expression>
+                <term>
+                  <identifier> Ay </identifier>
+                </term>
+              </expression>
+              <symbol> ; </symbol>
+            </letStatement>
+            <letStatement>
+              <keyword> let </keyword>
+              <identifier> size </identifier>
+              <symbol> = </symbol>
+              <expression>
+                <term>
+                  <identifier> Asize </identifier>
+                </term>
+              </expression>
+              <symbol> ; </symbol>
+            </letStatement>
+            <doStatement>
+              <keyword> do </keyword>
+              <identifier> draw </identifier>
+              <symbol> ( </symbol>
+              <expressionList>
+              </expressionList>
+              <symbol> ) </symbol>
+              <symbol> ; </symbol>
+            </doStatement>
+            <returnStatement>
+              <keyword> return </keyword>
+              <expression>
+                <term>
+                  <keyword> this </keyword>
+                </term>
+              </expression>
+              <symbol> ; </symbol>
+            </returnStatement>
+          </statements>
+          <symbol> } </symbol>
+        </subroutineBody>
+            """;
+
+    var result = parser.XMLOutput();
+    expectedResult = expectedResult.replaceAll("  ", "");
+    result = result.replaceAll("\r", ""); // no codigo em linux não tem o retorno de carro
+    assertEquals(expectedResult, result);
+  }
+
+  @Test
+  public void testParseVarDec() {
+    var input = "var String s;";
+    var parser = new Parser(input.getBytes(StandardCharsets.UTF_8));
+    parser.parseVarDec();
+    var expectedResult = """
+            <varDec>
+              <keyword> var </keyword>
+              <identifier> String </identifier>
+              <identifier> s </identifier>
+              <symbol> ; </symbol>
+            </varDec>
+        """;
+    var result = parser.XMLOutput();
+    expectedResult = expectedResult.replaceAll("  ", "");
+    result = result.replaceAll("\r", ""); // no codigo em linux não tem o retorno de carro
+    assertEquals(expectedResult, result);
+
+  }
+
+  @Test
+  public void testParseWhile() {
+    var input = """
+        while (key = 0) {
+          let key = 10;
+                do moveSquare();
+        }""";
+
+    var parser = new Parser(input.getBytes(StandardCharsets.UTF_8));
+    parser.parseWhile();
+    var expectedResult = """
+            <whileStatement>
+              <keyword> while </keyword>
+              <symbol> ( </symbol>
+              <expression>
+                <term>
+                  <identifier> key </identifier>
+                </term>
+                <symbol> = </symbol>
+                <term>
+                  <integerConstant> 0 </integerConstant>
+                </term>
+              </expression>
+              <symbol> ) </symbol>
+              <symbol> { </symbol>
+              <statements>
+                <letStatement>
+                  <keyword> let </keyword>
+                  <identifier> key </identifier>
+                  <symbol> = </symbol>
+                  <expression>
+                    <term>
+                      <integerConstant> 10 </integerConstant>
+                    </term>
+                  </expression>
+                  <symbol> ; </symbol>
+                </letStatement>
+                <doStatement>
+                  <keyword> do </keyword>
+                  <identifier> moveSquare </identifier>
+                  <symbol> ( </symbol>
+                  <expressionList>
+                  </expressionList>
+                  <symbol> ) </symbol>
+                  <symbol> ; </symbol>
+                </doStatement>
+              </statements>
+              <symbol> } </symbol>
+            </whileStatement>
+        """;
+    var result = parser.XMLOutput();
+    expectedResult = expectedResult.replaceAll("  ", "");
+    result = result.replaceAll("\r", ""); // no codigo em linux não tem o retorno de carro
+    assertEquals(expectedResult, result);
+
+  }
+
+  @Test
+  public void testParseIf() {
+    var input = """
+         if (direction = 1) { do square.moveUp(); }
+        """;
+
+    var parser = new Parser(input.getBytes(StandardCharsets.UTF_8));
+    parser.parseIf();
+    var expectedResult = """
+          <ifStatement>
+          <keyword> if </keyword>
+          <symbol> ( </symbol>
+          <expression>
+            <term>
+              <identifier> direction </identifier>
+            </term>
+            <symbol> = </symbol>
+            <term>
+              <integerConstant> 1 </integerConstant>
+            </term>
+          </expression>
+          <symbol> ) </symbol>
+          <symbol> { </symbol>
+          <statements>
+            <doStatement>
+              <keyword> do </keyword>
+              <identifier> square </identifier>
+              <symbol> . </symbol>
+              <identifier> moveUp </identifier>
+              <symbol> ( </symbol>
+              <expressionList>
+              </expressionList>
+              <symbol> ) </symbol>
+              <symbol> ; </symbol>
+            </doStatement>
+          </statements>
+          <symbol> } </symbol>
+        </ifStatement>
+          """;
+    var result = parser.XMLOutput();
+    expectedResult = expectedResult.replaceAll("  ", "");
+    result = result.replaceAll("\r", ""); // no codigo em linux não tem o retorno de carro
+    assertEquals(expectedResult, result);
+
+  }
+
+  @Test
+  public void testParseSubroutineDec() {
+    var input = """
+        constructor Square new(int Ax, int Ay, int Asize) {
+            let x = Ax;
+            let y = Ay;
+            let size = Asize;
+            do draw();
+            return this;
+         }
+            """;
+    ;
+    var parser = new Parser(input.getBytes(StandardCharsets.UTF_8));
+    parser.parseSubroutineDec();
+    var expectedResult = """
+          <subroutineDec>
+          <keyword> constructor </keyword>
+          <identifier> Square </identifier>
+          <identifier> new </identifier>
+          <symbol> ( </symbol>
+          <parameterList>
+            <keyword> int </keyword>
+            <identifier> Ax </identifier>
+            <symbol> , </symbol>
+            <keyword> int </keyword>
+            <identifier> Ay </identifier>
+            <symbol> , </symbol>
+            <keyword> int </keyword>
+            <identifier> Asize </identifier>
+          </parameterList>
+          <symbol> ) </symbol>
           <subroutineBody>
             <symbol> { </symbol>
             <statements>
@@ -300,269 +519,81 @@ public class ParserTest  extends TestSupport {
             </statements>
             <symbol> } </symbol>
           </subroutineBody>
+        </subroutineDec>
               """;
 
-      var result = parser.XMLOutput();
-      expectedResult = expectedResult.replaceAll("  ", "");
-      result = result.replaceAll("\r", ""); // no codigo em linux não tem o retorno de carro
-      assertEquals(expectedResult, result);
-    }
+    var result = parser.XMLOutput();
+    expectedResult = expectedResult.replaceAll("  ", "");
+    result = result.replaceAll("\r", ""); // no codigo em linux não tem o retorno de carro
+    assertEquals(expectedResult, result);
+  }
 
-    @Test
-    public void testParseVarDec(){
-      var input = "var String s;";
-        var parser = new Parser(input.getBytes(StandardCharsets.UTF_8));
-        parser.parseVarDec();
-				var expectedResult =  """
-        <varDec>
-          <keyword> var </keyword>
-          <identifier> String </identifier>
-          <identifier> s </identifier>
-          <symbol> ; </symbol>
-        </varDec>
-				""";
-        var result = parser.XMLOutput();
-        expectedResult = expectedResult.replaceAll("  ", "");
-        result = result.replaceAll("\r", ""); // no codigo em linux não tem o retorno de carro
-        assertEquals(expectedResult, result);
-
-    }
-  
-    @Test
-    public void testParseWhile() {
-      var input = """
-                  while (key = 0) {
-                    let key = 10;
-                          do moveSquare();
-                  }""";
-
-      var parser = new Parser(input.getBytes(StandardCharsets.UTF_8));
-      parser.parseWhile();
-      var expectedResult = """
-              <whileStatement>
-                <keyword> while </keyword>
-                <symbol> ( </symbol>
-                <expression>
-                  <term>
-                    <identifier> key </identifier>
-                  </term>
-                  <symbol> = </symbol>
-                  <term>
-                    <integerConstant> 0 </integerConstant>
-                  </term>
-                </expression>
-                <symbol> ) </symbol>
-                <symbol> { </symbol>
-                <statements>
-                  <letStatement>
-                    <keyword> let </keyword>
-                    <identifier> key </identifier>
-                    <symbol> = </symbol>
-                    <expression>
-                      <term>
-                        <integerConstant> 10 </integerConstant>
-                      </term>
-                    </expression>
-                    <symbol> ; </symbol>
-                  </letStatement>
-                  <doStatement>
-                    <keyword> do </keyword>
-                    <identifier> moveSquare </identifier>
-                    <symbol> ( </symbol>
-                    <expressionList>
-                    </expressionList>
-                    <symbol> ) </symbol>
-                    <symbol> ; </symbol>
-                  </doStatement>
-                </statements>
-                <symbol> } </symbol>
-              </whileStatement>
-          """;
-      var result = parser.XMLOutput();
-      expectedResult = expectedResult.replaceAll("  ", "");
-      result = result.replaceAll("\r", ""); // no codigo em linux não tem o retorno de carro
-      assertEquals(expectedResult, result);
-
-    }
-
-    @Test
-    public void testParseIf() {
-      var input = """
-                 if (direction = 1) { do square.moveUp(); }
-                """;
-
-      var parser = new Parser(input.getBytes(StandardCharsets.UTF_8));
-      parser.parseIf();
-      var expectedResult = """
-          <ifStatement>
-          <keyword> if </keyword>
-          <symbol> ( </symbol>
-          <expression>
-            <term>
-              <identifier> direction </identifier>
-            </term>
-            <symbol> = </symbol>
-            <term>
-              <integerConstant> 1 </integerConstant>
-            </term>
-          </expression>
-          <symbol> ) </symbol>
+  @Test
+  public void testParseClass() {
+    var input = """
+        class Main {
+            static boolean test;
+        }
+        """;
+    var parser = new Parser(input.getBytes(StandardCharsets.UTF_8));
+    parser.parseClass();
+    var expectedResult = """
+          <class>
+          <keyword> class </keyword>
+          <identifier> Main </identifier>
           <symbol> { </symbol>
-          <statements>
-            <doStatement>
-              <keyword> do </keyword>
-              <identifier> square </identifier>
-              <symbol> . </symbol>
-              <identifier> moveUp </identifier>
-              <symbol> ( </symbol>
-              <expressionList>
-              </expressionList>
-              <symbol> ) </symbol>
-              <symbol> ; </symbol>
-            </doStatement>
-          </statements>
+          <classVarDec>
+            <keyword> static </keyword>
+            <keyword> boolean </keyword>
+            <identifier> test </identifier>
+            <symbol> ; </symbol>
+          </classVarDec>
           <symbol> } </symbol>
-        </ifStatement>
-          """;
-      var result = parser.XMLOutput();
-      expectedResult = expectedResult.replaceAll("  ", "");
-      result = result.replaceAll("\r", ""); // no codigo em linux não tem o retorno de carro
-      assertEquals(expectedResult, result);
+        </class>
+        """;
 
-    }
+    var result = parser.XMLOutput();
+    expectedResult = expectedResult.replaceAll("  ", "");
+    result = result.replaceAll("\r", ""); // no codigo em linux não tem o retorno de carro
+    assertEquals(expectedResult, result);
+  }
 
-     @Test
-    public void testParseSubroutineDec() {
-        var input = """
-            constructor Square new(int Ax, int Ay, int Asize) {
-                let x = Ax;
-                let y = Ay;
-                let size = Asize;
-                do draw();
-                return this;
-             }
-                """;;
-        var parser = new Parser(input.getBytes(StandardCharsets.UTF_8));
-        parser.parseSubroutineDec();
-        var expectedResult = """
-            <subroutineDec>
-            <keyword> constructor </keyword>
-            <identifier> Square </identifier>
-            <identifier> new </identifier>
-            <symbol> ( </symbol>
-            <parameterList>
-              <keyword> int </keyword>
-              <identifier> Ax </identifier>
-              <symbol> , </symbol>
-              <keyword> int </keyword>
-              <identifier> Ay </identifier>
-              <symbol> , </symbol>
-              <keyword> int </keyword>
-              <identifier> Asize </identifier>
-            </parameterList>
-            <symbol> ) </symbol>
-            <subroutineBody>
-              <symbol> { </symbol>
-              <statements>
-                <letStatement>
-                  <keyword> let </keyword>
-                  <identifier> x </identifier>
-                  <symbol> = </symbol>
-                  <expression>
-                    <term>
-                      <identifier> Ax </identifier>
-                    </term>
-                  </expression>
-                  <symbol> ; </symbol>
-                </letStatement>
-                <letStatement>
-                  <keyword> let </keyword>
-                  <identifier> y </identifier>
-                  <symbol> = </symbol>
-                  <expression>
-                    <term>
-                      <identifier> Ay </identifier>
-                    </term>
-                  </expression>
-                  <symbol> ; </symbol>
-                </letStatement>
-                <letStatement>
-                  <keyword> let </keyword>
-                  <identifier> size </identifier>
-                  <symbol> = </symbol>
-                  <expression>
-                    <term>
-                      <identifier> Asize </identifier>
-                    </term>
-                  </expression>
-                  <symbol> ; </symbol>
-                </letStatement>
-                <doStatement>
-                  <keyword> do </keyword>
-                  <identifier> draw </identifier>
-                  <symbol> ( </symbol>
-                  <expressionList>
-                  </expressionList>
-                  <symbol> ) </symbol>
-                  <symbol> ; </symbol>
-                </doStatement>
-                <returnStatement>
-                  <keyword> return </keyword>
-                  <expression>
-                    <term>
-                      <keyword> this </keyword>
-                    </term>
-                  </expression>
-                  <symbol> ; </symbol>
-                </returnStatement>
-              </statements>
-              <symbol> } </symbol>
-            </subroutineBody>
-          </subroutineDec>
-                """;
+  // Testes finais
 
-        var result = parser.XMLOutput();
-        expectedResult = expectedResult.replaceAll("  ", "");
-        result = result.replaceAll("\r", ""); // no codigo em linux não tem o retorno de carro
-        assertEquals(expectedResult, result);
-    }
-    
-    // Testes finais
-    
-    @Test
-    public void testParserWithLessSquareGame() throws IOException {
-        var input = fromFile("ExpressionLessSquare/SquareGame.jack");
-        var expectedResult =  fromFile("ExpressionLessSquare/SquareGame.xml");
+  @Test
+  public void testParserWithLessSquareGame() throws IOException {
+    var input = fromFile("ExpressionLessSquare/SquareGame.jack");
+    var expectedResult = fromFile("ExpressionLessSquare/SquareGame.xml");
 
-        var parser = new Parser(input.getBytes(StandardCharsets.UTF_8));
-        parser.parse();
-        var result = parser.XMLOutput();
-        expectedResult = expectedResult.replaceAll("  ", "");
-        assertEquals(expectedResult, result);
-    }
+    var parser = new Parser(input.getBytes(StandardCharsets.UTF_8));
+    parser.parse();
+    var result = parser.XMLOutput();
+    expectedResult = expectedResult.replaceAll("  ", "");
+    assertEquals(expectedResult, result);
+  }
 
-    @Test
-    public void testParserWithSquareGame() throws IOException {
-        var input = fromFile("Square/SquareGame.jack");
-        var expectedResult =  fromFile("Square/SquareGame.xml");
+  @Test
+  public void testParserWithSquareGame() throws IOException {
+    var input = fromFile("Square/SquareGame.jack");
+    var expectedResult = fromFile("Square/SquareGame.xml");
 
-        var parser = new Parser(input.getBytes(StandardCharsets.UTF_8));
-        parser.parse();
-        var result = parser.XMLOutput();
-        expectedResult = expectedResult.replaceAll("  ", "");
-        assertEquals(expectedResult, result);
-    }
+    var parser = new Parser(input.getBytes(StandardCharsets.UTF_8));
+    parser.parse();
+    var result = parser.XMLOutput();
+    expectedResult = expectedResult.replaceAll("  ", "");
+    assertEquals(expectedResult, result);
+  }
 
-    @Test
-    public void testParserWithSquare() throws IOException {
-        var input = fromFile("Square/Square.jack");
-        var expectedResult =  fromFile("Square/Square.xml");
+  @Test
+  public void testParserWithSquare() throws IOException {
+    var input = fromFile("Square/Square.jack");
+    var expectedResult = fromFile("Square/Square.xml");
 
-        var parser = new Parser(input.getBytes(StandardCharsets.UTF_8));
-        parser.parse();
-        var result = parser.XMLOutput();
-        expectedResult = expectedResult.replaceAll("  ", "");
-        assertEquals(expectedResult, result);
-    }
+    var parser = new Parser(input.getBytes(StandardCharsets.UTF_8));
+    parser.parse();
+    var result = parser.XMLOutput();
+    expectedResult = expectedResult.replaceAll("  ", "");
+    assertEquals(expectedResult, result);
+  }
 
 }
