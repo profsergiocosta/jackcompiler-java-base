@@ -49,16 +49,11 @@ public class Parser {
 
         // 'int' | 'char' | 'boolean' | className
         expectPeek(TokenType.INT, TokenType.CHAR, TokenType.BOOLEAN, TokenType.IDENT);
-        String type = currentToken.value();
-
         expectPeek(TokenType.IDENT);
-        String name = currentToken.value();
 
         while (peekTokenIs(TokenType.COMMA)) {
             expectPeek(TokenType.COMMA);
             expectPeek(TokenType.IDENT);
-
-            name = currentToken.value();
         }
 
         expectPeek(TokenType.SEMICOLON);
@@ -71,18 +66,12 @@ public class Parser {
         if (!peekTokenIs(TokenType.RPAREN)) // verifica se tem pelo menos uma expressao
         {
             expectPeek(TokenType.INT, TokenType.CHAR, TokenType.BOOLEAN, TokenType.IDENT);
-            String type = currentToken.value();
-
             expectPeek(TokenType.IDENT);
-            String name = currentToken.value();
 
             while (peekTokenIs(TokenType.COMMA)) {
                 expectPeek(TokenType.COMMA);
                 expectPeek(TokenType.INT, TokenType.CHAR, TokenType.BOOLEAN, TokenType.IDENT);
-                type = currentToken.value();
-
                 expectPeek(TokenType.IDENT);
-                name = currentToken.value();
             }
 
         }
@@ -91,7 +80,14 @@ public class Parser {
     }
 
     public void parseSubroutineBody(String functionName, TokenType subroutineType) {
-
+        printNonTerminal("subroutineBody");
+        expectPeek(TokenType.LBRACE);
+        while (peekTokenIs(TokenType.VAR)) {
+            parseVarDec();
+        }
+        parseStatements();
+        expectPeek(TokenType.RBRACE);
+        printNonTerminal("/subroutineBody");
     }
 
     public void parseVarDec() {
@@ -257,8 +253,19 @@ public class Parser {
                 parseDo();
                 break;
             default:
-                throw error(peekToken, "Expected a statement");
+                throw error(peekToken.type, "Expected a statement");
         }
+    }
+
+    // ReturnStatement -> 'return' expression? ';'
+    public void parseReturn() {
+        printNonTerminal("returnStatement");
+        expectPeek(TokenType.RETURN);
+        if (!peekTokenIs(TokenType.SEMICOLON)) {
+            parseExpression();
+        } 
+        expectPeek(TokenType.SEMICOLON);
+        printNonTerminal("/returnStatement");
     }
 
     // 'while' '(' expression ')' '{' statements '}'

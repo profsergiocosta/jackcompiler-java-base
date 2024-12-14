@@ -224,89 +224,88 @@ public class ParserTest  extends TestSupport {
         assertEquals(expectedResult, result);
     }
 
-    @Test
+     @Test
     public void testParseSubroutineBody() {
-        var input = """
-            {
-                let x = Ax;
-                let y = Ay;
-                let size = Asize;
-                do draw();
-                return this;
-             }
-                """;
-                
-        var parser = new Parser(input.getBytes(StandardCharsets.UTF_8));
+      var input = """
+          {
+              let x = Ax;
+              let y = Ay;
+              let size = Asize;
+              do draw();
+              return this;
+          }
+              """;
 
-        var functionName = "this.a";
+      var parser = new Parser(input.getBytes(StandardCharsets.UTF_8));
 
-        parser.parseSubroutineBody(functionName, TokenType.CONSTRUCTOR);
-        
-        var expectedResult = """
-            <subroutineBody>
-              <symbol> { </symbol>
-              <statements>
-                <letStatement>
-                  <keyword> let </keyword>
-                  <identifier> x </identifier>
-                  <symbol> = </symbol>
-                  <expression>
-                    <term>
-                      <identifier> Ax </identifier>
-                    </term>
-                  </expression>
-                  <symbol> ; </symbol>
-                </letStatement>
-                <letStatement>
-                  <keyword> let </keyword>
-                  <identifier> y </identifier>
-                  <symbol> = </symbol>
-                  <expression>
-                    <term>
-                      <identifier> Ay </identifier>
-                    </term>
-                  </expression>
-                  <symbol> ; </symbol>
-                </letStatement>
-                <letStatement>
-                  <keyword> let </keyword>
-                  <identifier> size </identifier>
-                  <symbol> = </symbol>
-                  <expression>
-                    <term>
-                      <identifier> Asize </identifier>
-                    </term>
-                  </expression>
-                  <symbol> ; </symbol>
-                </letStatement>
-                <doStatement>
-                  <keyword> do </keyword>
-                  <identifier> draw </identifier>
-                  <symbol> ( </symbol>
-                  <expressionList>
-                  </expressionList>
-                  <symbol> ) </symbol>
-                  <symbol> ; </symbol>
-                </doStatement>
-                <returnStatement>
-                  <keyword> return </keyword>
-                  <expression>
-                    <term>
-                      <keyword> this </keyword>
-                    </term>
-                  </expression>
-                  <symbol> ; </symbol>
-                </returnStatement>
-              </statements>
-              <symbol> } </symbol>
-            </subroutineBody>ze </identifier>
-            </parameterList>
-                """;
+      var functionName = "this.a";
 
-        var result = parser.XMLOutput();
-        expectedResult = expectedResult.replaceAll("  ", "");
-        result = result.replaceAll("\r", ""); // no codigo em linux não tem o retorno de carro
-        assertEquals(expectedResult, result);
+      parser.parseSubroutineBody(functionName, TokenType.CONSTRUCTOR);
+
+      var expectedResult = """
+          <subroutineBody>
+            <symbol> { </symbol>
+            <statements>
+              <letStatement>
+                <keyword> let </keyword>
+                <identifier> x </identifier>
+                <symbol> = </symbol>
+                <expression>
+                  <term>
+                    <identifier> Ax </identifier>
+                  </term>
+                </expression>
+                <symbol> ; </symbol>
+              </letStatement>
+              <letStatement>
+                <keyword> let </keyword>
+                <identifier> y </identifier>
+                <symbol> = </symbol>
+                <expression>
+                  <term>
+                    <identifier> Ay </identifier>
+                  </term>
+                </expression>
+                <symbol> ; </symbol>
+              </letStatement>
+              <letStatement>
+                <keyword> let </keyword>
+                <identifier> size </identifier>
+                <symbol> = </symbol>
+                <expression>
+                  <term>
+                    <identifier> Asize </identifier>
+                  </term>
+                </expression>
+                <symbol> ; </symbol>
+              </letStatement>
+              <doStatement>
+                <keyword> do </keyword>
+                <identifier> draw </identifier>
+                <symbol> ( </symbol>
+                <expressionList>
+                </expressionList>
+                <symbol> ) </symbol>
+                <symbol> ; </symbol>
+              </doStatement>
+              <returnStatement>
+                <keyword> return </keyword>
+                <expression>
+                  <term>
+                    <keyword> this </keyword>
+                  </term>
+                </expression>
+                <symbol> ; </symbol>
+              </returnStatement>
+            </statements>
+            <symbol> } </symbol>
+          </subroutineBody>
+              """;
+
+      var result = parser.XMLOutput();
+      expectedResult = expectedResult.replaceAll("  ", "");
+      result = result.replaceAll("\r", ""); // no codigo em linux não tem o retorno de carro
+      assertEquals(expectedResult, result);
     }
 
     @Test
@@ -385,7 +384,6 @@ public class ParserTest  extends TestSupport {
       assertEquals(expectedResult, result);
 
     }
-
 
     @Test
     public void testParseIf() {
