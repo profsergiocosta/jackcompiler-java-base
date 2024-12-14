@@ -261,6 +261,22 @@ public class Parser {
         }
     }
 
+    // 'while' '(' expression ')' '{' statements '}'
+    public void parseWhile() {
+        printNonTerminal("whileStatement");
+
+        expectPeek(TokenType.WHILE);
+        expectPeek(TokenType.LPAREN);
+        parseExpression();
+
+        expectPeek(TokenType.RPAREN);
+        expectPeek(TokenType.LBRACE);
+        parseStatements();
+
+        expectPeek(TokenType.RBRACE);
+        printNonTerminal("/whileStatement");
+    }
+
     // funções auxiliares
     public String XMLOutput() {
         return xmlOutput.toString();
