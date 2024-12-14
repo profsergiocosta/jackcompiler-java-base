@@ -277,6 +277,31 @@ public class Parser {
         printNonTerminal("/whileStatement");
     }
 
+    public void parseIf() {
+        printNonTerminal("ifStatement");
+
+        expectPeek(TokenType.IF);
+        expectPeek(TokenType.LPAREN);
+        
+        parseExpression();
+        expectPeek(TokenType.RPAREN);
+        expectPeek(TokenType.LBRACE);
+        
+        parseStatements();
+        expectPeek(TokenType.RBRACE);
+
+        if (peekTokenIs(TokenType.ELSE))
+        {
+            expectPeek(TokenType.ELSE);
+            expectPeek(TokenType.LBRACE);
+            
+            parseStatements();
+            expectPeek(TokenType.RBRACE);
+        }
+
+        printNonTerminal("/ifStatement");
+    }
+
     // funções auxiliares
     public String XMLOutput() {
         return xmlOutput.toString();
