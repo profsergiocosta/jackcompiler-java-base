@@ -180,20 +180,26 @@ public class Parser {
         printNonTerminal("/expression");
     }
 
+    
     // letStatement -> 'let' identifier( '[' expression ']' )? '=' expression ';'
     public void parseLet() {
+
+        var isArray = false;
+
         printNonTerminal("letStatement");
         expectPeek(TokenType.LET);
         expectPeek(TokenType.IDENT);
 
-        if (peekTokenIs(TokenType.LBRACKET)) {
+        if (peekTokenIs(TokenType.LBRACKET)) { // array
             expectPeek(TokenType.LBRACKET);
             parseExpression();
             expectPeek(TokenType.RBRACKET);
+            isArray = true;
         }
 
         expectPeek(TokenType.EQ);
         parseExpression();
+
         expectPeek(TokenType.SEMICOLON);
         printNonTerminal("/letStatement");
     }
