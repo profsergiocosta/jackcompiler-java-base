@@ -263,9 +263,8 @@ public class Parser {
     printNonTerminal("/letStatement");
 }
     
-    // subroutineCall -> subroutineName '(' expressionList ')' | (className|varName)
-    // '.' subroutineName '(' expressionList ')
-    void parseSubroutineCall() {
+    // subroutineCall -> subroutineName '(' expressionList ')' | (className|varName)'.'subroutineName '('expressionList ')
+    public void parseSubroutineCall(){
 
         var nArgs = 0;
 
@@ -311,16 +310,6 @@ public class Parser {
         return nArgs;
     }
 
-    // 'do' subroutineCall ';'
-    public void parseDo() {
-        printNonTerminal("doStatement");
-        expectPeek(TokenType.DO);
-        expectPeek(TokenType.IDENT);
-        parseSubroutineCall();
-        expectPeek(TokenType.SEMICOLON);
-        printNonTerminal("/doStatement");
-    }
-
     public void parseStatement() {
         switch (peekToken.type) {
             case LET:
@@ -343,56 +332,24 @@ public class Parser {
         }
     }
 
-    // ReturnStatement -> 'return' expression? ';'
-    public void parseReturn() {
-        printNonTerminal("returnStatement");
-        expectPeek(TokenType.RETURN);
-        if (!peekTokenIs(TokenType.SEMICOLON)) {
-            parseExpression();
-        } 
-        expectPeek(TokenType.SEMICOLON);
-        printNonTerminal("/returnStatement");
-    }
-
     // 'while' '(' expression ')' '{' statements '}'
     public void parseWhile() {
-        printNonTerminal("whileStatement");
-
-        expectPeek(TokenType.WHILE);
-        expectPeek(TokenType.LPAREN);
-        parseExpression();
-
-        expectPeek(TokenType.RPAREN);
-        expectPeek(TokenType.LBRACE);
-        parseStatements();
-
-        expectPeek(TokenType.RBRACE);
-        printNonTerminal("/whileStatement");
+      
     }
 
     public void parseIf() {
-        printNonTerminal("ifStatement");
-
-        expectPeek(TokenType.IF);
-        expectPeek(TokenType.LPAREN);
+       
         
-        parseExpression();
-        expectPeek(TokenType.RPAREN);
-        expectPeek(TokenType.LBRACE);
+    }
+
+    // ReturnStatement -> 'return' expression? ';'
+    public void parseReturn() {
         
-        parseStatements();
-        expectPeek(TokenType.RBRACE);
+    }
 
-        if (peekTokenIs(TokenType.ELSE))
-        {
-            expectPeek(TokenType.ELSE);
-            expectPeek(TokenType.LBRACE);
-            
-            parseStatements();
-            expectPeek(TokenType.RBRACE);
-        }
+    // 'do' subroutineCall ';'
+    public void parseDo() {
 
-        printNonTerminal("/ifStatement");
     }
 
     // funções auxiliares
