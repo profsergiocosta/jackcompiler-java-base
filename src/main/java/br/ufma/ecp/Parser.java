@@ -279,6 +279,7 @@ public class Parser {
         } else {
             // pode ser um metodo de um outro objeto ou uma função
             expectPeek(DOT);
+
             expectPeek(IDENT); // nome da função
 
             expectPeek(LPAREN);
@@ -349,7 +350,14 @@ public class Parser {
 
     // 'do' subroutineCall ';'
     public void parseDo() {
-
+        //
+        printNonTerminal("doStatement");
+        expectPeek(DO);
+        expectPeek(IDENT);
+        parseSubroutineCall();
+        expectPeek(TokenType.SEMICOLON);
+        printNonTerminal("/doStatement");
+        //
     }
 
     // funções auxiliares
