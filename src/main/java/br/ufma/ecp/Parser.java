@@ -22,10 +22,12 @@ import static br.ufma.ecp.token.TokenType.DOT;
 import static br.ufma.ecp.token.TokenType.RBRACKET;
 import static br.ufma.ecp.token.TokenType.RPAREN;
 
-import javax.swing.text.Segment;
+//import javax.swing.text.Segment;
 
+import br.ufma.ecp.VMWriter.Command;
 import br.ufma.ecp.token.Token;
 import br.ufma.ecp.token.TokenType;
+import br.ufma.ecp.VMWriter.Segment;
 
 public class Parser {
 
@@ -40,9 +42,11 @@ public class Parser {
     private String className; // nome dae uma class
     private int ifLabelNum; // contador de if
     private int whileLabelNum;// contador de while
+    private VMWriter vmWriter;
 
     public Parser(byte[] input) {
         scan = new Scanner(input);
+        vmWriter = new VMWriter();
         nextToken();
     }
 
@@ -265,7 +269,6 @@ public class Parser {
     
     // subroutineCall -> subroutineName '(' expressionList ')' | (className|varName)'.'subroutineName '('expressionList ')
     public void parseSubroutineCall(){
-
         var nArgs = 0;
 
         var ident = currentToken.value();
@@ -273,6 +276,7 @@ public class Parser {
 
         if (peekTokenIs(LPAREN)) { // método da propria classe
             expectPeek(LPAREN);
+            vmWriter.writePush(Segment.POINTER, 0);
             nArgs = parseExpressionList() + 1;
             expectPeek(RPAREN);
             functionName = className + "." + ident;
@@ -287,6 +291,7 @@ public class Parser {
 
             expectPeek(RPAREN);
         }
+        vmWriter.writeCall(functionName, nArgs);
     }
 
     public int parseExpressionList() {
@@ -335,6 +340,30 @@ public class Parser {
 
     // 'while' '(' expression ')' '{' statements '}'
     public void parseWhile() {
+        printNonTerminal("whileStatement");
+
+        var labelTrue = "WHILE_EXP" + whileLabelNum;
+        var labelFalse = "WHILE_END" + whileLabelNum;
+        whileLabelNum++;
+
+        vmWriter.writeLabel(labelTrue);
+
+        expectPeek(TokenType.WHILE);
+        expectPeek(TokenType.LPAREN);
+        parseExpression();
+
+        vmWriter.writeArithmetic(Command.NOT);
+        vmWriter.writeIf(labelFalse);
+
+        expectPeek(TokenType.RPAREN);
+        expectPeek(TokenType.LBRACE);
+        parseStatements();
+
+        vmWriter.writeGoto(labelTrue); 
+        vmWriter.writeLabel(labelFalse); 
+
+        expectPeek(TokenType.RBRACE);
+        printNonTerminal("/whileStatement");
       
     }
 
