@@ -414,7 +414,17 @@ public class Parser {
 
     // ReturnStatement -> 'return' expression? ';'
     public void parseReturn() {
-        
+        printNonTerminal("returnStatement");
+        expectPeek(TokenType.RETURN);
+        if (!peekTokenIs(TokenType.SEMICOLON)) {
+            parseExpression();
+        } else {
+            vmWriter.writePush(Segment.CONST, 0);
+        }
+        expectPeek(TokenType.SEMICOLON);
+        vmWriter.writeReturn();
+
+        printNonTerminal("/returnStatement");
     }
 
     // 'do' subroutineCall ';'
